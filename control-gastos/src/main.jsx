@@ -1,10 +1,17 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import '../src/styles/index.css'
-import App from './App.jsx'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import {RouterProvider} from 'react-router-dom';
+import { router } from './routes/router.jsx';
+import {MovimientosProvider} from './context/MovimientosProvider.jsx';
+import {ThemeProvider} from './context/ThemeProvider.jsx';
+import './styles/index.css';
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <ThemeProvider>
+      <MovimientosProvider>
+        <RouterProvider router={router} />
+      </MovimientosProvider>
+    </ThemeProvider>
+  </React.StrictMode>,
 )
