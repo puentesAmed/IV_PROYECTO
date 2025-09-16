@@ -1,0 +1,7 @@
+{
+  "movimientos": [
+    { "id": 1, "fecha": "2025-09-01", "concepto": "Gasolina", "categoria": "Transporte", "importe": -45.5 },
+    { "id": 2, "fecha": "2025-09-02", "concepto": "Nómina", "categoria": "Ingresos", "importe": 1950 },
+    { "id": 3, "fecha": "2025-09-03", "concepto": "Supermercado", "categoria": "Alimentación", "importe": -68.2 }
+  ]
+}
