@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {RouterProvider} from 'react-router-dom';
 import { router } from './routes/router.jsx';
-import {MovimientosProvider} from './context/MovimientosProvider.jsx';
-import {ThemeProvider} from './context/ThemeProvider.jsx';
+import {MovimientosProvider} from './context/MovimientosContext.jsx';
+import {ThemeProvider} from './context/ThemeContext.jsx';
 import './styles/index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
