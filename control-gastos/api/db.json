@@ -34,6 +34,20 @@
       "concepto": "GAsoil",
       "categoria": "Transporte",
       "importe": 70
+    },
+    {
+      "id": "7714",
+      "fecha": "2025-09-20",
+      "concepto": "Luz",
+      "categoria": "Vivienda",
+      "importe": -120
+    },
+    {
+      "id": "377e",
+      "fecha": "2025-09-20",
+      "concepto": "NOMINA",
+      "categoria": "Ingresos",
+      "importe": 1500
     }
   ]
 }

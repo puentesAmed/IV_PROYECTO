@@ -5,12 +5,18 @@ import { useMemo } from 'react';
 
 export default function Home(){
     const { list } = useMovimientos({ page: 1, limit: 10 });
-    const { totalIngresos, totalGastos, balance } = useMemo(()=>{
-            const ingresos = list.filter(m=> m.importe > 0).reduce((a,b)=> a+b.importe,0);
-            const gastos = list.filter(m=> m.importe < 0).reduce((a,b)=> a+b.importe,0);
-            
-            return { totalIngresos: ingresos, totalGastos: gastos, balance: ingresos + gastos };
-        },[list]);
+    const { totalIngresos, gastosAbs, balance } = useMemo(() => {
+        const ingresos = list
+            .filter(m => m.categoria === "Ingresos")
+            .reduce((a, b) => a + Math.max(0, Number(b.importe)), 0);
+
+        const gastos = list
+            .filter(m => m.categoria !== "Ingresos")
+            .reduce((a, b) => a + Math.abs(Number(b.importe)), 0);
+
+        return { totalIngresos: ingresos, gastosAbs: gastos, balance: ingresos - gastos };
+    }, [list]);
+
 
     return (
         <section>
@@ -22,7 +28,7 @@ export default function Home(){
                 </div>
                 <div className="card kpi">
                     <div>Gastos</div>
-                    <strong>{totalGastos.toFixed(2)}€</strong>
+                    <strong>-{gastosAbs.toFixed(2)}€</strong>
                 </div>
                 <div className="card kpi">
                     <div>Balance</div>

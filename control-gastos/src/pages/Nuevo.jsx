@@ -19,11 +19,21 @@ export default function Nuevo(){
     reset } = useForm({ defaultValues: { fecha: new Date().toISOString().slice(0, 10) } });
     const onSubmit = async (data) => {
         const parsed = schema.safeParse(data);
-        if(!parsed.success) return;
-        await create(parsed.data);
+        if (!parsed.success) return;
+
+        const d = parsed.data;
+        const normalizado = {
+            ...d,
+            importe: d.categoria === "Ingresos"
+            ? Math.abs(Number(d.importe))
+            : -Math.abs(Number(d.importe)),
+        };
+
+        await create(normalizado);
         reset();
-        alert('Movimiento guardado');
+        alert("Movimiento guardado");
     };
+
     return (
         <section>
             <h1>Nuevo movimiento</h1>
