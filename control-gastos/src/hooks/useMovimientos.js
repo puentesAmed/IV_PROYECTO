@@ -11,7 +11,14 @@ export function useMovimientos(initial = {}) {
   useEffect(() => { fetchList(filters); }, [filters, fetchList]);
 
   const setFilter = useCallback((patch) => {
-    setFilters(prev => ({ ...prev, ...patch }));
+    setFilters(prev => { const next = { ...prev, ...patch }
+      if (("q" in patch && patch.q !== prev.q) ||
+          ("categoria" in patch && patch.categoria !== prev.categoria) ||
+          ("limit" in patch && patch.limit !== prev.limit)) {
+        next.page = 1;
+      }
+      return next;
+    });
   }, []);
 
   const refetch = useCallback(() => fetchList(filters), [fetchList, filters]);
@@ -21,9 +28,16 @@ export function useMovimientos(initial = {}) {
     [total, filters.limit]
   );
 
+  const goToPage = useCallback((p) => {
+    setFilters(prev => ({ ...prev, page: Math.min(Math.max(1, p), totalPages) }));
+  }, [totalPages]);
+
+  const nextPage = useCallback(() => goToPage((filters.page || 1) + 1), [goToPage, filters.page]);
+  const prevPage = useCallback(() => goToPage((filters.page || 1) - 1), [goToPage, filters.page]);
+
   const pagination = useMemo(
-    () => ({ total, totalPages, page: filters.page, limit: filters.limit }),
-    [total, totalPages, filters.page, filters.limit]
+    () => ({ total, totalPages, page: filters.page, limit: filters.limit, nextPage, prevPage, goToPage }),
+    [total, totalPages, filters.page, filters.limit, nextPage, prevPage, goToPage]
   );
 
   return { list, total, loading, error, filters, setFilter, pagination, refetch, create, update, remove };

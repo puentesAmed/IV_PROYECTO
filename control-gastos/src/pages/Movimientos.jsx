@@ -3,18 +3,27 @@ import Input from '../components/ui/Input';
 import Select from '../components/ui/Select';
 import { useDebounce } from '../hooks/useDebounce';
 import { useMovimientos } from '../hooks/useMovimientos';
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 
 
 export default function Movimientos(){
-    const { list, loading, filters, setFilter, pagination } = useMovimientos({page: 1, limit: 10, q: '', categoria: '' });
+    const { list, loading, filters, setFilter, pagination, remove } = useMovimientos({page: 1, limit: 10, q: '', categoria: '' });
     const debounced = useDebounce((v)=> setFilter({ q: v, page: 1 }), 400);
+
+    const handleDelete = useCallback(async (id) => {
+        if (!id) return;
+        const ok = window.confirm("¿Eliminar este movimiento?");
+        if (!ok) return;
+        await remove(id);
+  }, [remove]);
+
     const columns = useMemo(()=>[
         { key: 'fecha', header: 'Fecha' },
         { key: 'concepto', header: 'Concepto' },
         { key: 'categoria', header: 'Categoría' },
         { key: 'importe', header: 'Importe', render: (r)=> `${r.importe.toFixed(2)}€` },
-        ],[]);
+        { key: "acciones", header: "", render: (r) =><button className="btn" onClick={() => handleDelete(r.id)}>Eliminar</button>},  
+    ],[handleDelete]);
         return (
             <section>
                 <h1>Movimientos</h1>
