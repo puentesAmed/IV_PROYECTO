@@ -37,7 +37,7 @@ function MovimientosProvider({ children }) {
     await fetchList();
   }, [fetchList]);
   const remove = useCallback(async (id) => {
-    await svc.removeMovimiento(id);
+    await svc.deleteMovimiento(id);
     await fetchList();
   }, [fetchList]);
 

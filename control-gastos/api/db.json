@@ -1,7 +1,39 @@
 {
   "movimientos": [
-    { "id": 1, "fecha": "2025-09-01", "concepto": "Gasolina", "categoria": "Transporte", "importe": -45.5 },
-    { "id": 2, "fecha": "2025-09-02", "concepto": "Nómina", "categoria": "Ingresos", "importe": 1950 },
-    { "id": 3, "fecha": "2025-09-03", "concepto": "Supermercado", "categoria": "Alimentación", "importe": -68.2 }
+    {
+      "id": "1",
+      "fecha": "2025-09-01",
+      "concepto": "Gasolina",
+      "categoria": "Transporte",
+      "importe": -45.5
+    },
+    {
+      "id": "2",
+      "fecha": "2025-09-02",
+      "concepto": "Nómina",
+      "categoria": "Ingresos",
+      "importe": 1950
+    },
+    {
+      "id": "3",
+      "fecha": "2025-09-03",
+      "concepto": "Supermercado",
+      "categoria": "Alimentación",
+      "importe": -68.2
+    },
+    {
+      "id": "b3e8",
+      "fecha": "2025-09-20",
+      "concepto": "Pan",
+      "categoria": "Alimentación",
+      "importe": 50
+    },
+    {
+      "id": "f5e7",
+      "fecha": "2025-09-20",
+      "concepto": "GAsoil",
+      "categoria": "Transporte",
+      "importe": 70
+    }
   ]
 }
