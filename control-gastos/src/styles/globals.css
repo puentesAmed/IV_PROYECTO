@@ -1,0 +1,202 @@
+/* ============================= */
+/*        Tema Verde Global      */
+/* ============================= */
+:root {
+  --bg: #f5fdf7;
+  --text: #0f2e17;
+  --card: #ffffff;
+  --border: #cde8d5;
+  --primary: #2ecc71;
+  --primary-dark: #27ae60;
+  --surface: #e9f7ef;
+  --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --muted: #567;
+}
+
+[data-theme="dark"] {
+  --bg: #0b0f0c;
+  --text: #e6f4ec;
+  --card: #111;
+  --border: #1e2e23;
+  --primary: #2ecc71;
+  --primary-dark: #27ae60;
+  --surface: #1c231f;
+  --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.5);
+  --muted: #a0b3a9;
+}
+
+/* ============================= */
+/*       Reset & Layout Base     */
+/* ============================= */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden; /* 🔒 evita scroll horizontal global */
+}
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  flex: 0 0 auto;
+  padding: 1rem;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-main {
+  flex: 1 1 auto;
+  overflow-y: auto; /* 👈 solo aquí scroll vertical */
+  -webkit-overflow-scrolling: touch;
+  padding: 1rem;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* notch safe */
+}
+
+.app-footer {
+  flex: 0 0 auto;
+  padding: 0.75rem;
+  text-align: center;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+}
+
+/* ============================= */
+/*      Navegación & Botones     */
+/* ============================= */
+.nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav a.active {
+  color: var(--primary);
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn:hover {
+  background: var(--primary-dark);
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.btn.ghost:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* ============================= */
+/*          Formularios          */
+/* ============================= */
+.form {
+  display: grid;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ============================= */
+/*           Tablas              */
+/* ============================= */
+.table-container {
+  width: 100%;
+  overflow-x: auto; /* 👈 scroll horizontal solo aquí si necesario */
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 480px; /* evita que se rompa */
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* ============================= */
+/*  Responsive (Móviles)         */
+/* ============================= */
+@media (max-width: 768px) {
+  .app-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  .nav {
+    flex-wrap: wrap;
+  }
+}
+
+/* Convierte tabla a tarjetas en móviles */
+@media (max-width: 600px) {
+  .table thead { display: none; }
+  .table, .table tbody, .table tr, .table td {
+    display: block;
+    width: 100%;
+  }
+  .table tr {
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border);
+  }
+  .table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border: 0;
+  }
+  .table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--muted);
+    flex: 0 0 auto;
+    margin-right: 8px;
+    min-width: 90px;
+  }
+  .actions { margin-top: 8px; justify-content: flex-start; }
+  .btn { width: 100%; }
+}

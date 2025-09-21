@@ -1,13 +1,6 @@
 {
   "movimientos": [
     {
-      "id": "1",
-      "fecha": "2025-09-01",
-      "concepto": "Gasolina",
-      "categoria": "Transporte",
-      "importe": -45.5
-    },
-    {
       "id": "3",
       "fecha": "2025-09-03",
       "concepto": "Supermercado",
@@ -22,18 +15,18 @@
       "importe": 50
     },
     {
-      "id": "f5e7",
-      "fecha": "2025-09-20",
-      "concepto": "GAsoil",
-      "categoria": "Transporte",
-      "importe": 70
-    },
-    {
       "id": "7714",
       "fecha": "2025-09-20",
       "concepto": "Luz",
       "categoria": "Vivienda",
       "importe": -120
+    },
+    {
+      "id": "4aa0",
+      "fecha": "2025-09-20",
+      "concepto": "Juegetes",
+      "categoria": "Alimentación",
+      "importe": -56
     }
   ]
 }

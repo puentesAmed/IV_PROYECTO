@@ -1,19 +1,217 @@
-:root{
-  --bg: #f5f6f8;
-  --text: #111;
-  --card: #fff;
-  --border: #e5e7eb;
+:root {
+  /* Tema Light */
+  --bg: #FFFFFF;
+  --surface: #F5F5F5;
+  --text: #111827;
+  --text-muted: #374151;
+  --border: #9CA3AF;
+  --primary: #588dff;        /* Azul principal */
+  --primary-dark: #1E40AF;   /* Azul oscuro */
+  --accent: #F43F5E;         /* Rojo/acento */
+  --accent-dark: #BE123C;    /* Rojo oscuro */
+  --button: #4ADE80;         /* Verde claro */
+  --button-text: #111827;
+  /* Sombras */
+  --shadow-soft: 0 8px 30px rgba(0,0,0,0.2);
+  --shadow-strong: 0 18px 50px rgba(0,0,0,0.3);
 }
 
-[data-theme="dark"]{
-  --bg: #0b0c0f;
-  --text: #e5e7eb;
-  --card: #111318;
-  --border: #1f2937;
+[data-theme="dark"] {
+  /* Tema Dark */
+  --bg: #111827;
+  --surface: #1F2937;
+  --text: #FFFFFF;
+  --text-muted: #9CA3AF;
+  --border: #374151;
+  --primary: #3B82F6;        /* Azul más claro */
+  --primary-dark: #1E3A8A;
+  --accent: #FB7185;
+  --accent-dark: #9F1239;
+  --button: #4ADE80;
+  --button-text: #111827;
+  --shadow-soft: 0 8px 30px rgba(2,6,4,0.6);
+  --shadow-strong: 0 18px 50px rgba(2,6,4,0.7);
 }
 
-body{ margin:0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); }
+html{
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
 
-.header, .footer, .card { background: var(--card); border: 1px solid var(--border); }
-.table th, .table td { border-bottom: 1px solid var(--border); }
-.logo, .nav a { color: var(--text); }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+  transition: background 0.3s, color 0.3s;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  width: 100%;
+  height: 100%; /* asegura que ocupe toda la altura */
+  margin: 0;
+  padding: 0;
+  
+  display: flex;
+  flex-direction: column; /* útil si quieres header + contenido + footer */
+}
+
+.header {
+  width: 100%;
+  height: 50px; 
+  background: var(--bg);
+  color: white; 
+  display: flex;
+  justify-content: space-around;
+  align-items: center;  
+  margin: 0;
+  flex-direction: row;
+  border-bottom: 2px solid var(--border);
+}
+
+.logo {
+  text-decoration: none;
+  color: var(--accent-dark);
+}
+
+.header .container {
+  width: 100%;
+  margin-left: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  flex-grow: 1;
+  gap: 1rem;
+  padding: 10px;
+  margin-right: 10px;
+}
+
+.nav a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav a.active {
+  color: var(--accent-dark);
+}
+
+.theme-button {
+  display: inline-flex;              /* Activa flexbox */
+  align-items: center;              /* Centra verticalmente */
+  justify-content: center;         /* Centra horizontalmente */
+  background: transparent;
+  border: none;
+ 
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  margin-right: 5px;
+  
+}
+
+.theme-button img {
+  width: 26px;
+  height: 16px;
+}
+
+/* Main */
+
+.container { 
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.container h1 {
+  color: var(--text);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Botones */
+
+.btn {
+  background: var(--primary);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-strong);
+}
+
+/* Botón eliminar */
+.btn-delete {
+  background: var(--accent);
+  color: var(--color-dark-gray);
+  box-shadow: 0 4px 8px rgba(229,255,51,0.4);
+}
+
+.btn-delete:hover {
+  filter: brightness(0.85);
+  transform: translateY(-1px);
+}
+
+/* Tablas */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.table th {
+  background: var(--primary);
+  color: white;
+  padding: 0.8rem;
+  text-align: left;
+}
+
+.table tr {
+  background: var(--card);
+  transition: background 0.2s;
+}
+
+.table tr:hover {
+  background: #f0f8ff;  /* claro */
+}
+
+[data-theme="dark"] .table tr:hover {
+  background: rgba(26, 115, 232, 0.2); /* oscuro */
+}
+
+.table td {
+  padding: 0.8rem;
+}

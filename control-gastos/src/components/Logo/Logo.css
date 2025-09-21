@@ -1,0 +1,45 @@
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img-container {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;   /* círculo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.logo-image {
+  width: 60px;
+  height: auto;
+  padding: 0;
+  margin: 0;
+}
+
+.logo-text {
+  color: var(--color-blue-light);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  font-size: 15px;
+}
+
+   
+
+/* 🎨 Tema claro (sin fondo extra) */
+:root .logo-img-container {
+  background-color: transparent;
+}
+
+/* 🌙 Tema oscuro (fondo blanco) */
+[data-theme="dark"] .logo-img-container {
+  background-color: white;
+}
+
+[data-theme="dark"] .logo-text {
+    color: var(--color-yellow);
+}

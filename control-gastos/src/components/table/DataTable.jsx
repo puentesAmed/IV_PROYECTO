@@ -12,7 +12,8 @@ function _Table({ columns, rows }){
                 <tbody>
                     {rows.map(r=> (
                         <tr key={r.id ?? JSON.stringify(r)}>
-                            {columns.map(c=> <td key={String(c.key)}>{c.render? c.render(r): String(r[c.key])}</td>)}
+                            {columns.map(c=> (<td key={String(c.key)} data-label={c.header}>{c.render ? c.render(r) : String(r[c.key])}</td>))}
+
                         </tr>
                     ))}
                 </tbody>

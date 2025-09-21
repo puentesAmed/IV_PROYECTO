@@ -4,7 +4,7 @@ import {RouterProvider} from 'react-router-dom';
 import { router } from './routes/router.jsx';
 import {MovimientosProvider} from './context/MovimientosContext.jsx';
 import {ThemeProvider} from './context/ThemeContext.jsx';
-import { useTheme } from './hooks/useTheme.js';
+
 import './styles/index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
