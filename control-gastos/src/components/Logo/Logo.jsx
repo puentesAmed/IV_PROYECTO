@@ -4,7 +4,7 @@ import './Logo.css';
 const Logo = () => (
   <div className="logo-wrapper">
     <div className="logo-img-container">
-      <img src="../../../public/circulo_logo (1).png" alt="Logo Gastos Fácil" className="logo-image" />
+      <img src="/circulo_logo (1).png" alt="Logo Gastos Fácil" className="logo-image" />
     </div>
 
     <div className="logo-text">
