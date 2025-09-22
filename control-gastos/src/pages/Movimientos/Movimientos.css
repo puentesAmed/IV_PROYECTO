@@ -1,0 +1,60 @@
+.movimientos-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.mov-head {
+  margin-bottom: 12px;
+}
+.mov-head h1 {
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+}
+.mov-head .muted {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 16px;
+}
+.card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-strong);
+  transition: transform .12s ease;
+}
+
+/* Barra de filtros */
+.filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Tabla */
+.table-card {
+  overflow-x: auto;
+  overflow-y: auto;      /* scroll vertical */
+  max-height: 600px;     /* ajusta según diseño */
+}
+
+/* Botón eliminar */
+.btn-danger {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn-danger:hover {
+  background: color-mix(in srgb, var(--accent) 85%, black);
+}

@@ -49,122 +49,128 @@ export default function Home(){
         <p className="muted">Elige rango por fechas, meses o años.</p>
       </header>
 
-      <div className="card period">
-        {/* Selector de modo */}
-        <PeriodSwitch value={mode} onChange={setMode} />
+      <div className="home-grid">
+        <div className="home-left">
+          <div className="card period">
+            {/* Selector de modo */}
+            <PeriodSwitch value={mode} onChange={setMode} />
 
-        {/* Controles de rango */}
-        <div className="card" style={{ marginTop: 12 }}>
-          {mode === 'dates' && (
-            <div className="period-controls">
-              <div className="pc-item">
-                <label htmlFor="d1">Desde</label>
-                <input id="d1" type="date" className="input" value={dateStart} onChange={e=>setDateStart(e.target.value)} />
-              </div>
-              <div className="pc-item">
-                <label htmlFor="d2">Hasta</label>
-                <input id="d2" type="date" className="input" value={dateEnd} onChange={e=>setDateEnd(e.target.value)} />
-              </div>
+            {/* Controles de rango */}
+            <div className="card" style={{ marginTop: 12 }}>
+              {mode === 'dates' && (
+                <div className="period-controls">
+                  <div className="pc-item">
+                    <label htmlFor="d1">Desde</label>
+                    <input id="d1" type="date" className="input" value={dateStart} onChange={e=>setDateStart(e.target.value)} />
+                  </div>
+                  <div className="pc-item">
+                    <label htmlFor="d2">Hasta</label>
+                    <input id="d2" type="date" className="input" value={dateEnd} onChange={e=>setDateEnd(e.target.value)} />
+                  </div>
+                </div>
+              )}
+              {mode === 'months' && (
+                <div className="period-controls">
+                  <div className="pc-item">
+                    <label htmlFor="m1">Desde</label>
+                    <input id="m1" type="month" className="input" value={monthStart} onChange={e=>setMonthStart(e.target.value)} />
+                  </div>
+                  <div className="pc-item">
+                    <label htmlFor="m2">Hasta</label>
+                    <input id="m2" type="month" className="input" value={monthEnd} onChange={e=>setMonthEnd(e.target.value)} />
+                  </div>
+                </div>
+              )}
+              {mode === 'years' && (
+                <div className="period-controls">
+                  <div className="pc-item">
+                    <label htmlFor="y1">Desde</label>
+                    <input id="y1" type="number" className="input" min="1970" max="9999" value={yearStart} onChange={e=>setYearStart(e.target.value)} />
+                  </div>
+                  <div className="pc-item">
+                    <label htmlFor="y2">Hasta</label>
+                    <input id="y2" type="number" className="input" min="1970" max="9999" value={yearEnd} onChange={e=>setYearEnd(e.target.value)} />
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-          {mode === 'months' && (
-            <div className="period-controls">
-              <div className="pc-item">
-                <label htmlFor="m1">Desde</label>
-                <input id="m1" type="month" className="input" value={monthStart} onChange={e=>setMonthStart(e.target.value)} />
-              </div>
-              <div className="pc-item">
-                <label htmlFor="m2">Hasta</label>
-                <input id="m2" type="month" className="input" value={monthEnd} onChange={e=>setMonthEnd(e.target.value)} />
-              </div>
+
+            {/* KPIs */}
+            <div className="grid kpis" style={{ marginTop: 12 }}>
+              <article className="card kpi">
+                <span className="kpi__label">Ingresos</span>
+                <span className="kpi__value kpi__value--pos">{fmtMoney.format(tIng)}</span>
+              </article>
+              <article className="card kpi">
+                <span className="kpi__label">Gastos</span>
+                <span className="kpi__value kpi__value--neg">-{fmtMoney.format(tGas).replace('€','').trim()}€</span>
+              </article>
+              <article className="card kpi">
+                <span className="kpi__label">Balance</span>
+                <span className={`kpi__value ${balance>=0?'kpi__value--pos':'kpi__value--neg'}`}>{fmtMoney.format(balance)}</span>
+              </article>
             </div>
-          )}
-          {mode === 'years' && (
-            <div className="period-controls">
-              <div className="pc-item">
-                <label htmlFor="y1">Desde</label>
-                <input id="y1" type="number" className="input" min="1970" max="9999" value={yearStart} onChange={e=>setYearStart(e.target.value)} />
-              </div>
-              <div className="pc-item">
-                <label htmlFor="y2">Hasta</label>
-                <input id="y2" type="number" className="input" min="1970" max="9999" value={yearEnd} onChange={e=>setYearEnd(e.target.value)} />
-              </div>
-            </div>
-          )}
+
+            {/* Gráfico */}
+            <article className="card chart">
+              <h2 className="chart__title">
+                Resumen por {mode === 'dates' ? 'días' : mode === 'years' ? 'años' : 'meses'}
+              </h2>
+              <MonthlyBar
+                data={series}
+                xKey="label"
+                series={[
+                  { key: 'ingresos', label: 'Ingresos', color: 'var(--button)' },
+                  { key: 'gastos',   label: 'Gastos',   color: 'var(--accent)' }
+                ]}
+                height={220}
+                variant="line"   // o "line" si quieres con líneas
+              />
+            </article>
+          </div>
         </div>
 
-        {/* KPIs */}
-        <div className="grid kpis" style={{ marginTop: 12 }}>
-          <article className="card kpi">
-            <span className="kpi__label">Ingresos</span>
-            <span className="kpi__value kpi__value--pos">{fmtMoney.format(tIng)}</span>
-          </article>
-          <article className="card kpi">
-            <span className="kpi__label">Gastos</span>
-            <span className="kpi__value kpi__value--neg">-{fmtMoney.format(tGas).replace('€','').trim()}€</span>
-          </article>
-          <article className="card kpi">
-            <span className="kpi__label">Balance</span>
-            <span className={`kpi__value ${balance>=0?'kpi__value--pos':'kpi__value--neg'}`}>{fmtMoney.format(balance)}</span>
-          </article>
-        </div>
+        <div className="home-right">
+          {/* Últimos movimientos */}
+          <article className="card data-card">
+            <div className="data-card__bar">
+              <h2 className="data-card__title">Últimos movimientos</h2>
+              <Link to="/movimientos" className="btn">Ver todos</Link>
+            </div>
 
-        {/* Gráfico */}
-        <article className="card chart">
-          <h2 className="chart__title">
-            Resumen por {mode === 'dates' ? 'días' : mode === 'years' ? 'años' : 'meses'}
-          </h2>
-          <MonthlyBar
-            data={series}
-            xKey="label"
-            series={[
-              { key: 'ingresos', label: 'Ingresos', color: 'var(--button)' },
-              { key: 'gastos',   label: 'Gastos',   color: 'var(--accent)' }
-            ]}
-            height={220}
-            variant="line"   // o "line" si quieres con líneas
-          />
-        </article>
-      </div>
-
-      {/* Últimos movimientos */}
-      <article className="card data-card">
-        <div className="data-card__bar">
-          <h2 className="data-card__title">Últimos movimientos</h2>
-          <Link to="/movimientos" className="btn">Ver todos</Link>
-        </div>
-
-        <div className="table-wrap">
-          <table className="table table-modern">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Concepto</th>
-                <th>Categoría</th>
-                <th className="num">Importe</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.slice(0,10).map((m,i)=>{
-                const ingreso = m.categoria === 'Ingresos';
-                const val = Number(m.importe)||0;
-                return (
-                  <tr key={m._id || i}>
-                    <td data-label="Fecha">{fmtDate.format(new Date(m.fecha || m.createdAt || Date.now()))}</td>
-                    <td data-label="Concepto" className="text-strong">{m.concepto || '-'}</td>
-                    <td data-label="Categoría">
-                      <span className={`badge ${ingreso?'badge--pos':'badge--muted'}`}>{m.categoria}</span>
-                    </td>
-                    <td data-label="Importe" className={`num amount ${ingreso?'amount--pos':'amount--neg'}`}>
-                      {fmtMoney.format(ingreso ? Math.max(0,val) : -Math.abs(val))}
-                    </td>
+            <div className="table-wrap">
+              <table className="table table-modern">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Concepto</th>
+                    <th>Categoría</th>
+                    <th className="num">Importe</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {list.slice(0,10).map((m,i)=>{
+                    const ingreso = m.categoria === 'Ingresos';
+                    const val = Number(m.importe)||0;
+                    return (
+                      <tr key={m._id || i}>
+                        <td data-label="Fecha">{fmtDate.format(new Date(m.fecha || m.createdAt || Date.now()))}</td>
+                        <td data-label="Concepto" className="text-strong">{m.concepto || '-'}</td>
+                        <td data-label="Categoría">
+                          <span className={`badge ${ingreso?'badge--pos':'badge--muted'}`}>{m.categoria}</span>
+                        </td>
+                        <td data-label="Importe" className={`num amount ${ingreso?'amount--pos':'amount--neg'}`}>
+                          {fmtMoney.format(ingreso ? Math.max(0,val) : -Math.abs(val))}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </article>
         </div>
-      </article>
+      </div>
     </section>
   );
 }
