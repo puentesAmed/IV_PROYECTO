@@ -49,5 +49,29 @@ export function useMovimientos(initial = {}) {
   const setFilter = useCallback(patch => setFilters(prev => ({ ...prev, ...patch, page: 1 })), []);
   const refetch  = useCallback(() => fetchMovimientos({ page: 1, append: false }), [fetchMovimientos]);
 
-  return { list, loading, error, filters, setFilter, refetch, loadNextPage };
+  // ✅ NUEVO: crear movimiento
+  const create = useCallback(async (nuevo) => {
+    const res = await fetch(`${API}/movimientos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(nuevo),
+    });
+    if (!res.ok) throw new Error("Error al crear movimiento");
+    const data = await res.json();
+    setList(prev => [...prev, data]);
+    return data;
+  }, []);
+
+  // ✅ NUEVO: eliminar movimiento
+  const remove = useCallback(async (id) => {
+    const res = await fetch(`${API}/movimientos/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error("Error al eliminar movimiento");
+    setList(prev => prev.filter(m => m.id !== id));
+  }, []);
+
+  return { 
+    list, loading, error, filters, setFilter, 
+    refetch, loadNextPage, 
+    create, remove  // 👉 ahora disponibles
+  };
 }

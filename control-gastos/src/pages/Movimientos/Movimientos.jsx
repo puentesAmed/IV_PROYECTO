@@ -3,19 +3,21 @@ import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import { useDebounce } from '../../hooks/useDebounce';
 import { useMovimientos } from '../../hooks/useMovimientos';
-import { useMemo, useCallback, useRef } from 'react';
+import { useMemo, useCallback, useRef, useState } from 'react';
 import './Movimientos.css';
 
 export default function Movimientos() {
-  const { list, loading, filters, setFilter, loadNextPage } = useMovimientos({
+  const { list, loading, filters, setFilter, loadNextPage, remove } = useMovimientos({
     q: '',
-    categoria: ''
+    categoria: '',
+    limit: 'ALL'   // 👈 traigo todos los movimientos
   });
 
+  const [search, setSearch] = useState('');
   const tableRef = useRef();
-  const debouncedSearch = useDebounce((v) => setFilter({ q: v }), 400);
+  const debouncedSearch = useDebounce((v) => setSearch(v.toLowerCase()), 400);
 
-  // Scroll infinito con debounce
+  // Scroll (solo por si cambias a paginación)
   const handleScroll = useCallback(() => {
     const el = tableRef.current;
     if (!el || loading) return;
@@ -24,12 +26,35 @@ export default function Movimientos() {
     }
   }, [loading, loadNextPage]);
 
+  const handleDelete = useCallback(async (id) => {
+    if (!id) return;
+    const ok = window.confirm("¿Eliminar este movimiento?");
+    if (!ok) return;
+    await remove(id);
+  }, [remove]);
+
+  // 🔍 Filtro en frontend
+  const filteredList = useMemo(() => {
+    return list.filter((mov) => {
+      const text = `${mov.fecha} ${mov.concepto} ${mov.categoria} ${mov.importe}`.toLowerCase();
+      return text.includes(search);
+    });
+  }, [list, search]);
+
   const columns = useMemo(() => [
     { key: 'fecha', header: 'Fecha' },
     { key: 'concepto', header: 'Concepto' },
     { key: 'categoria', header: 'Categoría' },
     { key: 'importe', header: 'Importe', render: (r) => `${Number(r.importe).toFixed(2)}€` },
-  ], []);
+    { 
+      key: "acciones", 
+      header: "", 
+      render: (r) =>
+        <button className="btn" onClick={() => handleDelete(r.id)}>
+          Eliminar
+        </button>
+    },  
+  ], [handleDelete]);
 
   return (
     <section className="movimientos-view">
@@ -41,7 +66,6 @@ export default function Movimientos() {
       <div className="card filters-bar">
         <Input
           placeholder="Buscar por fecha, concepto, categoría o importe"
-          defaultValue={filters.q}
           onChange={(e) => debouncedSearch(e.target.value)}
         />
         <Select
@@ -53,6 +77,21 @@ export default function Movimientos() {
           <option>Transporte</option>
           <option>Vivienda</option>
           <option>Ingresos</option>
+          <option>Ahorro</option>
+          <option>Hogar</option>
+          <option>Tecnología</option>
+          <option>Viajes</option>
+          <option>Impuestos</option>
+          <option>Niños</option>
+          <option>Ocio</option>
+          <option>Salud</option>
+          <option>Educación</option>
+          <option>Regalos</option>
+          <option>Ropa</option>
+          <option>Mascotas</option>
+          <option>Deportes</option>
+          <option>Suscripciones</option>
+          <option>Otros</option>
         </Select>
       </div>
 
@@ -60,11 +99,11 @@ export default function Movimientos() {
         className="card table-card"
         ref={tableRef}
         onScroll={handleScroll}
-        style={{ maxHeight: '500px', overflowY: 'auto' }} // asegura scroll vertical
+        style={{ maxHeight: '500px', overflowY: 'auto' }}
       >
-        <DataTable columns={columns} rows={list} />
+        <DataTable columns={columns} rows={filteredList} />
         {loading && <p style={{ textAlign: 'center', margin: '8px 0' }}>Cargando…</p>}
-        {!loading && list.length === 0 && <p style={{ textAlign: 'center', margin: '8px 0' }}>No hay movimientos</p>}
+        {!loading && filteredList.length === 0 && <p style={{ textAlign: 'center', margin: '8px 0' }}>No hay movimientos</p>}
       </div>
     </section>
   );
