@@ -1,9 +1,8 @@
 import MonthlyBar from '../../components/charts/MonthlyBar';
 import PeriodSwitch from '../../components/PeriodSwitch/PeriodSwitch';
-import { aggregate } from '../../utils/aggregateMovs';
+import { useResumenMovs } from '../../hooks/useResumenMovs';
 import { useMovimientos } from '../../hooks/useMovimientos';
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import './Home.css';
 
 export default function Home(){
@@ -24,23 +23,18 @@ export default function Home(){
   const [monthEnd, setMonthEnd]     = useState(`${yyyy}-${mm}`);
   const [yearStart, setYearStart]   = useState(String(yyyy-2));
   const [yearEnd, setYearEnd]       = useState(String(yyyy));
+  const [summaryTab, setSummaryTab] = useState('period'); // 'period' | 'cats'
 
   const fmtMoney = useMemo(
     () => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }),
     []
   );
-  const fmtDate = useMemo(
-    () => new Intl.DateTimeFormat('es-ES', { dateStyle: 'medium' }),
-    []
-  );
-
-  // Serie + totales ya calculados por el util
-  const { series, totals } = useMemo(
-    () => aggregate(list, mode, { dateStart, dateEnd, monthStart, monthEnd, yearStart, yearEnd }),
-    [list, mode, dateStart, dateEnd, monthStart, monthEnd, yearStart, yearEnd]
-  );
-
+  
+  const { series, totals, catRows, periodColLabel } = useResumenMovs(list, {
+    mode, dateStart, dateEnd, monthStart, monthEnd, yearStart, yearEnd
+  });
   const { ingresos: tIng = 0, gastos: tGas = 0, balance = 0 } = totals || {};
+
 
   return (
     <section className="home-view">
@@ -130,46 +124,90 @@ export default function Home(){
           </div>
         </div>
 
+      {/* Derecha: tabla de resúmenes */}
         <div className="home-right">
-          {/* Últimos movimientos */}
           <article className="card data-card">
             <div className="data-card__bar">
-              <h2 className="data-card__title">Últimos movimientos</h2>
-              <Link to="/movimientos" className="btn">Ver todos</Link>
+              <h2 className="data-card__title">
+                {summaryTab === 'period' ? `Resumen por ${periodColLabel.toLowerCase()}` : 'Resumen por categorías'}
+              </h2>
+
+              <div className="period-switch">
+                <button className={`chip ${summaryTab==='period'?'chip--active':''}`} onClick={()=>setSummaryTab('period')}>
+                  Periodo
+                </button>
+                <button className={`chip ${summaryTab==='cats'?'chip--active':''}`} onClick={()=>setSummaryTab('cats')}>
+                  Categorías
+                </button>
+              </div>
             </div>
 
-            <div className="table-wrap">
-              <table className="table table-modern">
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>Concepto</th>
-                    <th>Categoría</th>
-                    <th className="num">Importe</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {list.slice(0,10).map((m,i)=>{
-                    const ingreso = m.categoria === 'Ingresos';
-                    const val = Number(m.importe)||0;
-                    return (
-                      <tr key={m._id || i}>
-                        <td data-label="Fecha">{fmtDate.format(new Date(m.fecha || m.createdAt || Date.now()))}</td>
-                        <td data-label="Concepto" className="text-strong">{m.concepto || '-'}</td>
-                        <td data-label="Categoría">
-                          <span className={`badge ${ingreso?'badge--pos':'badge--muted'}`}>{m.categoria}</span>
+            {summaryTab === 'period' ? (
+              <div className="table-wrap">
+                <table className="table table-modern">
+                  <thead>
+                    <tr>
+                      <th>{periodColLabel}</th>
+                      <th className="num">Ingresos</th>
+                      <th className="num">Gastos</th>
+                      <th className="num">Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {series.map((r, i) => (
+                      <tr key={r.key || i}>
+                        <td data-label={periodColLabel} className="text-strong">{r.label}</td>
+                        <td data-label="Ingresos" className="num amount amount--pos">{fmtMoney.format(r.ingresos || 0)}</td>
+                        <td data-label="Gastos" className="num amount amount--neg">
+                          -{fmtMoney.format((r.gastos || 0)).replace('€','').trim()}€
                         </td>
-                        <td data-label="Importe" className={`num amount ${ingreso?'amount--pos':'amount--neg'}`}>
-                          {fmtMoney.format(ingreso ? Math.max(0,val) : -Math.abs(val))}
+                        <td data-label="Balance" className={`num amount ${((r.ingresos||0)-(r.gastos||0))>=0?'amount--pos':'amount--neg'}`}>
+                          {fmtMoney.format((r.ingresos||0)-(r.gastos||0))}
                         </td>
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                    ))}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th>Total</th>
+                      <th className="num amount amount--pos">{fmtMoney.format(tIng)}</th>
+                      <th className="num amount amount--neg">-{fmtMoney.format(tGas).replace('€','').trim()}€</th>
+                      <th className={`num amount ${balance>=0?'amount--pos':'amount--neg'}`}>{fmtMoney.format(balance)}</th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            ) : (
+              <div className="table-wrap">
+                <table className="table table-modern">
+                  <thead>
+                    <tr>
+                      <th>Categoría</th>
+                      <th className="num">Ingresos</th>
+                      <th className="num">Gastos</th>
+                      <th className="num">Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {catRows.map((r, i) => (
+                      <tr key={r.categoria || i}>
+                        <td data-label="Categoría" className="text-strong">{r.categoria}</td>
+                        <td data-label="Ingresos" className="num amount amount--pos">{fmtMoney.format(r.ingresos)}</td>
+                        <td data-label="Gastos" className="num amount amount--neg">
+                          -{fmtMoney.format(r.gastos).replace('€','').trim()}€
+                        </td>
+                        <td data-label="Balance" className={`num amount ${r.balance>=0?'amount--pos':'amount--neg'}`}>
+                          {fmtMoney.format(r.balance)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </article>
         </div>
+        
       </div>
     </section>
   );

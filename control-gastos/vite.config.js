@@ -8,7 +8,6 @@ export default defineConfig({
     react(),
     svgr(),
   ],
-  // ✅ añade soporte para importar SVG como ReactComponent
 });
 
 

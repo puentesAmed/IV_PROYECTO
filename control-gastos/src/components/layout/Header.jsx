@@ -1,9 +1,8 @@
 import { Link, NavLink } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
-import Logo from '../Logo/Logo'; 
-
-
-
+import Logo from '../Logo/Logo';
+import light from '../../assets/light-mode-iconSol.png';
+import dark from '../../assets/dark-mode-iconluna.png';
 
 
 export default function Header(){
@@ -21,8 +20,8 @@ export default function Header(){
                 </nav>
                 <button className='theme-button' onClick={toggle} aria-label="Cambiar tema">
                     {theme === 'light' 
-                        ? <img src="/light-mode-iconSol.png" alt="Modo claro" /> 
-                        : <img src="/dark-mode-iconluna.png" alt="Modo oscuro" />}
+                        ? <img src={light} alt="Modo claro" /> 
+                        : <img src={dark} alt="Modo oscuro" />}
                 </button>
 
             </div>

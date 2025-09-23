@@ -1,6 +1,6 @@
-// src/components/PeriodSwitch.jsx
+
 export default function PeriodSwitch({
-  value = 'months',                 // 'dates' | 'months' | 'years'
+  value = 'months',                
   onChange = () => {},
   options = [
     { k: 'dates',  label: 'Fechas' },
