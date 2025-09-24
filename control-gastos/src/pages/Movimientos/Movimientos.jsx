@@ -5,6 +5,7 @@ import { useDebounce } from '../../hooks/useDebounce';
 import { useMovimientos } from '../../hooks/useMovimientos';
 import { useMemo, useCallback, useRef, useState } from 'react';
 import './Movimientos.css';
+import eliminar from '../../assets/cesto.png';
 
 export default function Movimientos() {
   const { list, loading, filters, setFilter, loadNextPage, remove } = useMovimientos({
@@ -50,8 +51,8 @@ export default function Movimientos() {
       key: "acciones", 
       header: "", 
       render: (r) =>
-        <button className="btn" onClick={() => handleDelete(r.id)}>
-          Eliminar
+        <button className="move-btn" onClick={() => handleDelete(r.id)}>
+          <img src={eliminar} alt="Eliminar" className='icon-invert-white'/>
         </button>
     },  
   ], [handleDelete]);
@@ -63,10 +64,11 @@ export default function Movimientos() {
         <p className="muted">Consulta, busca y gestiona todos tus movimientos.</p>
       </header>
 
-      <div className="card filters-bar">
+      <div className="cardfilters-bar">
         <Input
           placeholder="Buscar por fecha, concepto, categoría o importe"
           onChange={(e) => debouncedSearch(e.target.value)}
+          id="search"
         />
         <Select
           value={filters.categoria}

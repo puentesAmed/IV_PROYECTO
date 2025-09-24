@@ -172,18 +172,6 @@ body {
   box-shadow: var(--shadow-strong);
 }
 
-/* Botón eliminar */
-.btn-delete {
-  background: var(--accent);
-  color: var(--color-dark-gray);
-  box-shadow: 0 4px 8px rgba(229,255,51,0.4);
-}
-
-.btn-delete:hover {
-  filter: brightness(0.85);
-  transform: translateY(-1px);
-}
-
 /* Tablas */
 .table {
   width: 100%;
@@ -210,8 +198,39 @@ body {
 
 [data-theme="dark"] .table tr:hover {
   background: rgba(26, 115, 232, 0.2); /* oscuro */
+  color: #f0f8ff;
 }
-
 .table td {
   padding: 0.8rem;
 }
+
+[data-theme="dark"] .input::placeholder,
+[data-theme="dark"] textarea::placeholder{
+  color: var(--text);            
+  opacity: 1;
+}
+
+/* Placeholder de select (si usas option value="") */
+select:invalid{ color: var(--text-muted); }
+[data-theme="dark"] .select:invalid{ color: #9CA3AF; }
+
+/* DARK: texto y flecha blancos */
+[data-theme="dark"] .select{
+  color:#fff !important;              
+  -webkit-text-fill-color:#fff;       
+}
+
+/* Opciones del desplegable (cuando el menú se abre) */
+select option{ color: var(--text); }
+[data-theme="dark"] .select option{ color:#fff; background: #111827; }
+
+[data-theme="dark"] .input[type="date"],
+[data-theme="dark"] .input[type="number"],
+[data-theme="dark"] .input[type="month"]{ color:#fff; -webkit-text-fill-color:#fff; }
+
+[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+[data-theme="dark"] input[type="month"]::-webkit-calendar-picker-indicator{
+  filter: invert(1) brightness(1.6) contrast(1.2);
+  opacity:1;
+}
+
