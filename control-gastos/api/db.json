@@ -5,7 +5,7 @@
       "fecha": "2025-09-20",
       "concepto": "Pan",
       "categoria": "Alimentación",
-      "importe": 50
+      "importe": -50
     },
     {
       "id": "7714",
@@ -17,8 +17,8 @@
     {
       "id": "4aa0",
       "fecha": "2025-09-20",
-      "concepto": "Juegetes",
-      "categoria": "Alimentación",
+      "concepto": "Juguetes",
+      "categoria": "Niños",
       "importe": -56
     },
     {
@@ -416,9 +416,12 @@
     {
       "id": "9891",
       "fecha": "2025-09-23",
-      "concepto": "LUZ",
-      "categoria": "Hogar",
+      "concepto": "Luz",
+      "categoria": "Vivienda",
       "importe": -98
     }
+  ],
+  "users": [
+    { "id": "u1", "email": "demo@demo.com", "password": "demo", "name": "demo" }
   ]
 }

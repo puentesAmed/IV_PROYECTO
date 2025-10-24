@@ -88,14 +88,17 @@ body {
   color: var(--accent-dark);
 }
 
-.header .container {
+.header__inner{
   width: 100%;
-  margin-left: 5px;
+  margin: 0 auto;
+  padding: 0 16px;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: nowrap;         /* evita salto de línea */
   align-items: center;
-  flex-direction: row;
+  justify-content: space-between;
+  gap: 16px;
 }
+
 
 
 .nav {

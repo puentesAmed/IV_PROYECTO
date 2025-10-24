@@ -3,29 +3,31 @@ import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import { useDebounce } from '../../hooks/useDebounce';
 import { useMovimientos } from '../../hooks/useMovimientos';
-import { useMemo, useCallback, useRef, useState } from 'react';
+import { useMemo, useCallback, useRef, useState, useEffect } from 'react';
 import './Movimientos.css';
 import eliminar from '../../assets/cesto.png';
 
 export default function Movimientos() {
-  const { list, loading, filters, setFilter, loadNextPage, remove } = useMovimientos({
+  const { list, loading, hasMore, filters, setFilter, loadNextPage, remove } = useMovimientos({
     q: '',
     categoria: '',
-    limit: 'ALL'   // 👈 traigo todos los movimientos
+    limit: 20
   });
 
   const [search, setSearch] = useState('');
   const tableRef = useRef();
-  const debouncedSearch = useDebounce((v) => setSearch(v.toLowerCase()), 400);
+  const { debounced: debouncedSearch } = useDebounce((v) => setSearch(v.toLowerCase()), 300);
 
-  // Scroll (solo por si cambias a paginación)
+  // sincroniza búsqueda con backend
+  useEffect(() => { setFilter({ q: search }); }, [search, setFilter]);
+
   const handleScroll = useCallback(() => {
     const el = tableRef.current;
     if (!el || loading) return;
-    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 10) {
+    if (hasMore && el.scrollTop + el.clientHeight >= el.scrollHeight - 10) {
       loadNextPage();
     }
-  }, [loading, loadNextPage]);
+  }, [loading, hasMore, loadNextPage]);
 
   const handleDelete = useCallback(async (id) => {
     if (!id) return;
@@ -34,28 +36,30 @@ export default function Movimientos() {
     await remove(id);
   }, [remove]);
 
-  // 🔍 Filtro en frontend
-  const filteredList = useMemo(() => {
-    return list.filter((mov) => {
-      const text = `${mov.fecha} ${mov.concepto} ${mov.categoria} ${mov.importe}`.toLowerCase();
-      return text.includes(search);
-    });
-  }, [list, search]);
+  const eur = useMemo(
+    () => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }),
+    []
+  );
 
   const columns = useMemo(() => [
     { key: 'fecha', header: 'Fecha' },
     { key: 'concepto', header: 'Concepto' },
     { key: 'categoria', header: 'Categoría' },
-    { key: 'importe', header: 'Importe', render: (r) => `${Number(r.importe).toFixed(2)}€` },
-    { 
-      key: "acciones", 
-      header: "", 
+    {
+      key: 'importe',
+      header: 'Importe',
+      render: (r) => eur.format(Number.isFinite(+r.importe) ? +r.importe : 0),
+      align: 'right'
+    },
+    {
+      key: "acciones",
+      header: "",
       render: (r) =>
-        <button className="move-btn" onClick={() => handleDelete(r.id)}>
-          <img src={eliminar} alt="Eliminar" className='icon-invert-white'/>
+        <button className="move-btn" onClick={() => handleDelete(r.id)} aria-label={`Eliminar movimiento ${r.concepto ?? r.id}`} title="Eliminar">
+          <img src={eliminar} alt="" className='icon-invert-white'/>
         </button>
-    },  
-  ], [handleDelete]);
+    },
+  ], [handleDelete, eur]);
 
   return (
     <section className="movimientos-view">
@@ -64,7 +68,7 @@ export default function Movimientos() {
         <p className="muted">Consulta, busca y gestiona todos tus movimientos.</p>
       </header>
 
-      <div className="cardfilters-bar">
+      <div className="filters-bar">
         <Input
           placeholder="Buscar por fecha, concepto, categoría o importe"
           onChange={(e) => debouncedSearch(e.target.value)}
@@ -103,9 +107,11 @@ export default function Movimientos() {
         onScroll={handleScroll}
         style={{ maxHeight: '500px', overflowY: 'auto' }}
       >
-        <DataTable columns={columns} rows={filteredList} />
-        {loading && <p style={{ textAlign: 'center', margin: '8px 0' }}>Cargando…</p>}
-        {!loading && filteredList.length === 0 && <p style={{ textAlign: 'center', margin: '8px 0' }}>No hay movimientos</p>}
+        <DataTable columns={columns} rows={Array.isArray(list) ? list : []} />
+        {loading && <p role="status" style={{ textAlign: 'center', margin: '8px 0' }}>Cargando…</p>}
+        {!loading && (!Array.isArray(list) || list.length === 0) && (
+          <p style={{ textAlign: 'center', margin: '8px 0' }}>No hay movimientos</p>
+        )}
       </div>
     </section>
   );

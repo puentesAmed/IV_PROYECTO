@@ -1,6 +1,11 @@
-import { memo } from 'react';
+import { memo } from "react";
 
-export default memo(function Button(props){
-    return <button {...props} className={`btn ${props.className ?? ''}`.trim()} />;
+export default memo(function Button({ className, loading, ...rest }) {
+  return (
+    <button
+      {...rest}
+      disabled={loading || rest.disabled}
+      className={`btn ${className ?? ""}`.trim()}
+    />
+  );
 });
-
