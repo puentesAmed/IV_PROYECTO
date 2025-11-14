@@ -1,5 +1,5 @@
 import MonthlyBar from '../../components/charts/MonthlyBar';
-import PeriodSwitch from '../../components/PeriodSwitch/PeriodSwitch';
+import PeriodSwitch from '../../components/common/PeriodSwitch/PeriodSwitch';
 import { useResumenMovs } from '../../hooks/useResumenMovs';
 import { useMovimientos } from '../../hooks/useMovimientos';
 import { useMemo, useState } from 'react';

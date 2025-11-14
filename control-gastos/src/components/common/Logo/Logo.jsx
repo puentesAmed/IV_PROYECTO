@@ -1,6 +1,6 @@
 import React from 'react';
 import './Logo.css';
-import logo from '../../assets/circulo_logo (1).png'
+import logo from '../../../assets/circulo_logo (1).png'
 
 const Logo = () => (
   <div className="logo-wrapper">

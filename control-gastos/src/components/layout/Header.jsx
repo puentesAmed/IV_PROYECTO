@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useTheme } from "../../hooks/useTheme";
-import Logo from "../Logo/Logo";
+import Logo from "../common/Logo/Logo";
 import light from "../../assets/light-mode-iconSol.png";
 import dark from "../../assets/dark-mode-iconluna.png";
 import { useAuth } from "../../hooks/useAuth";

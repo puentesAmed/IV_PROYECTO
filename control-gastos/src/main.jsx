@@ -4,7 +4,7 @@ import {RouterProvider} from 'react-router-dom';
 import { router } from './routes/router.jsx';
 import {MovimientosProvider} from './context/MovimientosContext.jsx';
 import ThemeProvider from './context/ThemeProvider.jsx';
-import AuthProvider from './context/AuthProvider.jsx';
+import { AuthProvider } from './context/AuthProvider.jsx';
 
 import './styles/index.css';
 

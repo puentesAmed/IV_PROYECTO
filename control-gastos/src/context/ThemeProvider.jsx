@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ThemeContext } from "./theme-context";
+import { ThemeContext } from "./ThemeContext";
 const KEY = "app_theme";
 
 export default function ThemeProvider({ children }) {
