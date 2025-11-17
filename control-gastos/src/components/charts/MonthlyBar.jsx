@@ -1,11 +1,11 @@
-import React from 'react';
+import PropTypes from "prop-types";
 
-export default function MonthlyBar({
+export function MonthlyBar({
   data = [],
-  xKey = 'label',
-  series = [{ key: 'value', label: 'Valor', color: 'var(--primary)' }],
+  xKey = "label",
+  series = [{ key: "value", label: "Valor", color: "var(--primary)" }],
   height = 220,
-  variant = 'bars',
+  variant = "bars", // 'bars' | 'line' | 'points'
 }) {
   const margin = { top: 10, right: 16, bottom: 40, left: 32 };
   const baseY = height - margin.bottom;
@@ -13,7 +13,7 @@ export default function MonthlyBar({
 
   const maxVal = Math.max(
     1,
-    ...data.flatMap(d => series.map(s => Number(d[s.key]) || 0))
+    ...data.flatMap((d) => series.map((s) => Number(d[s.key]) || 0))
   );
 
   // disposición en X
@@ -25,25 +25,41 @@ export default function MonthlyBar({
 
   const svgW = Math.max(320, margin.left + data.length * stepX + margin.right);
 
-  // genera puntos (x,y) por serie para polilíneas y círculos
-  const ptsBySeries = series.map(s => data.map((d, i) => {
-    const val = Number(d[s.key]) || 0;
-    const y = baseY - Math.round((val / maxVal) * maxBarH);
-    const x = centerX(i);
-    return { x, y };
-  }));
+  // puntos (x,y) por serie para líneas y puntos
+  const ptsBySeries = series.map((s) =>
+    data.map((d, i) => {
+      const val = Number(d[s.key]) || 0;
+      const y = baseY - Math.round((val / maxVal) * maxBarH);
+      const x = centerX(i);
+      return { x, y };
+    })
+  );
 
   return (
-    <figure className="mb-chart" aria-label="Gráfico">
+    <figure className="mb-chart" aria-label="Gráfico de movimientos">
       <figcaption className="mb-legend" aria-hidden="true">
-        {series.map(s => (
-          <span key={s.key}><i style={{ background: s.color || 'var(--primary)' }} />{s.label}</span>
+        {series.map((s) => (
+          <span key={s.key}>
+            <i style={{ background: s.color || "var(--primary)" }} />
+            {s.label}
+          </span>
         ))}
       </figcaption>
 
-      <svg viewBox={`0 0 ${svgW} ${height}`} className="mb-svg" role="img">
+      <svg
+        viewBox={`0 0 ${svgW} ${height}`}
+        className="mb-svg"
+        role="img"
+        aria-hidden="false"
+      >
         {/* eje base */}
-        <line x1="0" y1={baseY} x2={svgW} y2={baseY} stroke="var(--border)" />
+        <line
+          x1="0"
+          y1={baseY}
+          x2={svgW}
+          y2={baseY}
+          stroke="var(--border)"
+        />
 
         {/* etiquetas X */}
         {data.map((d, i) => (
@@ -59,44 +75,86 @@ export default function MonthlyBar({
         ))}
 
         {/* BARRAS */}
-        {variant === 'bars' && data.map((d, i) => {
-          const cx = centerX(i);
-          return (
-            <g key={`g-${i}`}>
-              {series.map((s, j) => {
-                const val = Number(d[s.key]) || 0;
-                const h = Math.round((val / maxVal) * maxBarH);
-                const y = baseY - h;
-                const x = cx - groupW / 2 + j * (barW + gapInGroup);
-                return (
-                  <rect
-                    key={s.key}
-                    x={x} y={y} width={barW} height={h}
-                    rx="3" fill={s.color || 'var(--primary)'}
-                  />
-                );
-              })}
-            </g>
-          );
-        })}
+        {variant === "bars" &&
+          data.map((d, i) => {
+            const cx = centerX(i);
+            return (
+              <g key={`g-${i}`}>
+                {series.map((s, j) => {
+                  const val = Number(d[s.key]) || 0;
+                  const h = Math.round((val / maxVal) * maxBarH);
+                  const y = baseY - h;
+                  const x = cx - groupW / 2 + j * (barW + gapInGroup);
+                  return (
+                    <rect
+                      key={s.key}
+                      x={x}
+                      y={y}
+                      width={barW}
+                      height={h}
+                      rx="3"
+                      fill={s.color || "var(--primary)"}
+                    />
+                  );
+                })}
+              </g>
+            );
+          })}
 
         {/* LÍNEA */}
-        {variant === 'line' && ptsBySeries.map((pts, si) => (
-          <g key={`line-${si}`} fill="none" stroke={series[si].color || 'var(--primary)'} strokeWidth="2">
-            <polyline points={pts.map(p => `${p.x},${p.y}`).join(' ')} />
-            {pts.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="3" fill={series[si].color || 'var(--primary)'} />)}
-          </g>
-        ))}
+        {variant === "line" &&
+          ptsBySeries.map((pts, si) => (
+            <g
+              key={`line-${si}`}
+              fill="none"
+              stroke={series[si].color || "var(--primary)"}
+              strokeWidth="2"
+            >
+              <polyline
+                points={pts.map((p) => `${p.x},${p.y}`).join(" ")}
+              />
+              {pts.map((p, i) => (
+                <circle
+                  key={i}
+                  cx={p.x}
+                  cy={p.y}
+                  r="3"
+                  fill={series[si].color || "var(--primary)"}
+                />
+              ))}
+            </g>
+          ))}
 
         {/* PUNTOS */}
-        {variant === 'points' && ptsBySeries.map((pts, si) => (
-          <g key={`pts-${si}`}>
-            {pts.map((p, i) => (
-              <circle key={i} cx={p.x} cy={p.y} r="4" fill={series[si].color || 'var(--primary)'} />
-            ))}
-          </g>
-        ))}
+        {variant === "points" &&
+          ptsBySeries.map((pts, si) => (
+            <g key={`pts-${si}`}>
+              {pts.map((p, i) => (
+                <circle
+                  key={i}
+                  cx={p.x}
+                  cy={p.y}
+                  r="4"
+                  fill={series[si].color || "var(--primary)"}
+                />
+              ))}
+            </g>
+          ))}
       </svg>
     </figure>
   );
 }
+
+MonthlyBar.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object),
+  xKey: PropTypes.string,
+  series: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      color: PropTypes.string,
+    })
+  ),
+  height: PropTypes.number,
+  variant: PropTypes.oneOf(["bars", "line", "points"]),
+};

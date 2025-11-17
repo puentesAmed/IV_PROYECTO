@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ThemeContext } from "./ThemeContext";
 const KEY = "app_theme";
 
-export default function ThemeProvider({ children }) {
+export function ThemeProvider({ children }) {
   const getSystem = () => (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   const [theme, setTheme] = useState(() => localStorage.getItem(KEY) || getSystem());
 

@@ -1,33 +1,8 @@
-/*import { memo } from 'react';
+import { memo } from "react";
+import PropTypes from "prop-types";
 
-function _Table({ columns, rows }){
-    return (
-        <div className="table-responsive">
-            <table className="table">
-                <thead>
-                    <tr>
-                        {columns.map(c=> <th key={String(c.key)}>{c.header}</th>)}
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows.map(r=> (
-                        <tr key={r.id ?? JSON.stringify(r)}>
-                            {columns.map(c=> (<td key={String(c.key)} data-label={c.header}>{c.render ? c.render(r) : String(r[c.key])}</td>))}
-
-                        </tr>
-                    ))}
-                </tbody>
-            </table>        
-        </div>
-    );
-}
-export default memo(_Table); 
-*/
-
-import React, { memo } from "react";
-
-function DataTable({
-  columns = [],                 // [{ key, header, render?, align?, className?, width? }]
+function DataTableInner({
+  columns = [],
   rows = [],
   caption = "Listado de movimientos",
   getRowId = (r) => r.id,
@@ -41,22 +16,34 @@ function DataTable({
     <div className="table-responsive">
       <table className="table">
         <caption className="sr-only">{caption}</caption>
+
         <colgroup>
           {columns.map((c) => (
-            <col key={String(c.key)} style={c.width ? { width: c.width } : undefined} />
+            <col
+              key={String(c.key)}
+              style={c.width ? { width: c.width } : undefined}
+            />
           ))}
         </colgroup>
+
         <thead>
           <tr>
             {columns.map((c) => (
-              <th key={String(c.key)} scope="col">{c.header}</th>
+              <th key={String(c.key)} scope="col">
+                {c.header}
+              </th>
             ))}
           </tr>
         </thead>
+
         <tbody>
           {loading && (
             <tr>
-              <td colSpan={columns.length} role="status" style={{ textAlign: "center" }}>
+              <td
+                colSpan={columns.length}
+                role="status"
+                style={{ textAlign: "center" }}
+              >
                 Cargando…
               </td>
             </tr>
@@ -74,11 +61,22 @@ function DataTable({
             safeRows.map((r, i) => {
               const rowId = getRowId(r) ?? i;
               return (
-                <tr key={rowId} onClick={onRowClick ? () => onRowClick(r) : undefined}>
+                <tr
+                  key={rowId}
+                  onClick={onRowClick ? () => onRowClick(r) : undefined}
+                >
                   {columns.map((c) => {
                     const value = r?.[c.key];
-                    const content = c.render ? c.render(r, value, i) : String(value ?? "");
-                    const alignClass = c.align === "right" ? "num" : c.align === "center" ? "center" : "";
+                    const content = c.render
+                      ? c.render(r, value, i)
+                      : String(value ?? "");
+                    const alignClass =
+                      c.align === "right"
+                        ? "num"
+                        : c.align === "center"
+                        ? "center"
+                        : "";
+
                     return (
                       <td
                         key={String(c.key)}
@@ -98,4 +96,23 @@ function DataTable({
   );
 }
 
-export default memo(DataTable);
+DataTableInner.propTypes = {
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      header: PropTypes.string.isRequired,
+      width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      align: PropTypes.oneOf(["left", "right", "center"]),
+      className: PropTypes.string,
+      render: PropTypes.func,
+    })
+  ),
+  rows: PropTypes.arrayOf(PropTypes.object),
+  caption: PropTypes.string,
+  getRowId: PropTypes.func,
+  loading: PropTypes.bool,
+  emptyText: PropTypes.string,
+  onRowClick: PropTypes.func,
+};
+
+export const DataTable = memo(DataTableInner);

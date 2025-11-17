@@ -1,39 +1,42 @@
 :root {
   /* Tema Light */
-  --bg: #FFFFFF;
-  --surface: #F5F5F5;
+  --bg: #ffffff;
+  --surface: #f5f5f5;
   --text: #111827;
   --text-muted: #374151;
-  --border: #9CA3AF;
+  --border: #9ca3af;
   --primary: #588dff;        /* Azul principal */
-  --primary-dark: #1E40AF;   /* Azul oscuro */
-  --accent: #F43F5E;         /* Rojo/acento */
-  --accent-dark: #BE123C;    /* Rojo oscuro */
-  --button: #4ADE80;         /* Verde claro */
+  --primary-dark: #1e40af;   /* Azul oscuro */
+  --accent: #f43f5e;         /* Rojo/acento */
+  --accent-dark: #be123c;    /* Rojo oscuro */
+  --button: #4ade80;         /* Verde claro */
   --button-text: #111827;
+
   /* Sombras */
-  --shadow-soft: 0 8px 30px rgba(0,0,0,0.2);
-  --shadow-strong: 0 18px 50px rgba(0,0,0,0.3);
+  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.2);
+  --shadow-strong: 0 18px 50px rgba(0, 0, 0, 0.3);
 }
 
 [data-theme="dark"] {
   /* Tema Dark */
   --bg: #111827;
-  --surface: #1F2937;
-  --text: #FFFFFF;
-  --text-muted: #9CA3AF;
+  --surface: #1f2937;
+  --text: #ffffff;
+  --text-muted: #9ca3af;
   --border: #374151;
-  --primary: #3B82F6;        /* Azul más claro */
-  --primary-dark: #1E3A8A;
-  --accent: #FB7185;
-  --accent-dark: #9F1239;
-  --button: #4ADE80;
+  --primary: #3b82f6;        /* Azul más claro */
+  --primary-dark: #1e3a8a;
+  --accent: #fb7185;
+  --accent-dark: #9f1239;
+  --button: #4ade80;
   --button-text: #111827;
-  --shadow-soft: 0 8px 30px rgba(2,6,4,0.6);
-  --shadow-strong: 0 18px 50px rgba(2,6,4,0.7);
+
+  --shadow-soft: 0 8px 30px rgba(2, 6, 4, 0.6);
+  --shadow-strong: 0 18px 50px rgba(2, 6, 4, 0.7);
 }
 
-html{
+/* Reset básico */
+html {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -42,14 +45,12 @@ html{
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+  font-family: "Segoe UI", Roboto, system-ui, sans-serif;
   transition: background 0.3s, color 0.3s;
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  justify-content: center;
-  align-items: center;
   overflow-x: hidden;
 }
 
@@ -62,22 +63,36 @@ body {
 
 .app {
   width: 100%;
-  height: 100%; /* asegura que ocupe toda la altura */
+  height: 100%;
   margin: 0;
   padding: 0;
-  
   display: flex;
-  flex-direction: column; /* útil si quieres header + contenido + footer */
+  flex-direction: column;
 }
 
+/* Layout principal */
+.container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+  flex: 1;
+  box-sizing: border-box;
+}
+
+.container h1 {
+  color: var(--text);
+}
+
+/* Header */
 .header {
   width: 100%;
-  height: 50px; 
+  height: 50px;
   background: var(--bg);
-  color: white; 
+  color: var(--text);
   display: flex;
   justify-content: space-around;
-  align-items: center;  
+  align-items: center;
   margin: 0;
   flex-direction: row;
   border-bottom: 2px solid var(--border);
@@ -88,23 +103,21 @@ body {
   color: var(--accent-dark);
 }
 
-.header__inner{
+.header__inner {
   width: 100%;
   margin: 0 auto;
   padding: 0 16px;
   display: flex;
-  flex-wrap: nowrap;         /* evita salto de línea */
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
 
-
-
 .nav {
   display: flex;
   align-items: center;
-  justify-content: right;
+  justify-content: flex-end;
   flex-grow: 1;
   gap: 1rem;
   padding: 10px;
@@ -121,17 +134,16 @@ body {
   color: var(--accent-dark);
 }
 
+/* Botón tema */
 .theme-button {
-  display: inline-flex;              /* Activa flexbox */
-  align-items: center;              /* Centra verticalmente */
-  justify-content: center;         /* Centra horizontalmente */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   border: none;
- 
   cursor: pointer;
   transition: transform 0.2s ease;
   margin-right: 5px;
-  
 }
 
 .theme-button img {
@@ -139,34 +151,17 @@ body {
   height: 16px;
 }
 
-/* Main */
-
-.container { 
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-}
-
-.container h1 {
-  color: var(--text);
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-/* Botones */
-
+/* Botones generales */
 .btn {
   background: var(--primary);
-  color: white;
+  color: #fff;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   box-shadow: var(--shadow-soft);
-  transition: all 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  font: inherit;
 }
 
 .btn:hover {
@@ -175,65 +170,136 @@ body {
   box-shadow: var(--shadow-strong);
 }
 
-/* Tablas */
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Variante outline si la usas (ej: botón salir) */
+.btn--outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.btn--outline:hover {
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Tablas base (las específicas en Home/Movimientos) */
 .table {
   width: 100%;
   border-collapse: collapse;
-  overflow: hidden;
   border-radius: 12px;
+  overflow: hidden;
 }
 
 .table th {
   background: var(--primary);
-  color: white;
+  color: #fff;
   padding: 0.8rem;
   text-align: left;
 }
 
 .table tr {
-  background: var(--card);
-  transition: background 0.2s;
+  background: var(--surface);
+  transition: background 0.15s ease;
 }
 
 .table tr:hover {
-  background: #f0f8ff;  /* claro */
+  background: #f0f8ff;
 }
 
 [data-theme="dark"] .table tr:hover {
-  background: rgba(26, 115, 232, 0.2); /* oscuro */
+  background: rgba(26, 115, 232, 0.2);
   color: #f0f8ff;
 }
+
 .table td {
   padding: 0.8rem;
 }
 
+/* Inputs y selects globales (coherentes con Nuevo / Login) */
+.input,
+.select {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.95rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Footer */
+footer .container {
+  padding: 16px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+
+/* Placeholder en dark */
 [data-theme="dark"] .input::placeholder,
-[data-theme="dark"] textarea::placeholder{
-  color: var(--text);            
+[data-theme="dark"] textarea::placeholder {
+  color: var(--text-muted);
   opacity: 1;
 }
 
-/* Placeholder de select (si usas option value="") */
-select:invalid{ color: var(--text-muted); }
-[data-theme="dark"] .select:invalid{ color: #9CA3AF; }
+/* select "placeholder" (option value="") */
+select:invalid {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .select:invalid {
+  color: #9ca3af;
+}
 
 /* DARK: texto y flecha blancos */
-[data-theme="dark"] .select{
-  color:#fff !important;              
-  -webkit-text-fill-color:#fff;       
+[data-theme="dark"] .select {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff;
 }
 
-/* Opciones del desplegable (cuando el menú se abre) */
-select option{ color: var(--text); }
-[data-theme="dark"] .select option{ color:#fff; background: #111827; }
+/* Opciones del select */
+select option {
+  color: var(--text);
+}
 
+[data-theme="dark"] .select option {
+  color: #fff;
+  background: #111827;
+}
+
+/* Inputs de fecha/número/mes en dark */
 [data-theme="dark"] .input[type="date"],
 [data-theme="dark"] .input[type="number"],
-[data-theme="dark"] .input[type="month"]{ color:#fff; -webkit-text-fill-color:#fff; }
-
-[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
-[data-theme="dark"] input[type="month"]::-webkit-calendar-picker-indicator{
-  filter: invert(1) brightness(1.6) contrast(1.2);
-  opacity:1;
+[data-theme="dark"] .input[type="month"] {
+  color: #fff;
+  -webkit-text-fill-color: #fff;
 }
 
+/* Icono del date/month en dark */
+[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+[data-theme="dark"] input[type="month"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.6) contrast(1.2);
+  opacity: 1;
+}
+
+/* Utility */
+.muted {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}

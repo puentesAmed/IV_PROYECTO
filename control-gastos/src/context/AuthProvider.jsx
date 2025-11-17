@@ -20,9 +20,7 @@ export function AuthProvider({ children }) {
       } else {
         localStorage.removeItem(STORAGE_KEY);
       }
-    } catch {
-      /* almacenamiento no disponible */
-    }
+    } catch {/**/}
   }, [user]);
 
   const login = useCallback(async ({ email, password }) => {

@@ -1,6 +1,19 @@
-import { forwardRef, memo } from 'react';
+import { forwardRef, memo } from "react";
+import PropTypes from "prop-types";
 
-export default memo(forwardRef(function Input(props, ref){
-    return <input ref={ref} {...props} className={`input ${props.className ??''}`.trim()}/>;
-}));
+const InputInner = forwardRef(function InputInner(props, ref) {
+  const { className = "", ...rest } = props;
+  return (
+    <input
+      ref={ref}
+      {...rest}
+      className={`input ${className}`.trim()}
+    />
+  );
+});
 
+InputInner.propTypes = {
+  className: PropTypes.string,
+};
+
+export const Input = memo(InputInner);

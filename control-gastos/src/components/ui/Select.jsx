@@ -1,7 +1,20 @@
-import { forwardRef, memo } from 'react';
+import { forwardRef, memo } from "react";
+import PropTypes from "prop-types";
 
-export default memo(forwardRef(function Select(props, ref){
-    return <select ref={ref} {...props} className={`select ${props.className ?? ''}`.trim()} />;
-}));
+const SelectInner = forwardRef(function SelectInner(props, ref) {
+  const { className = "", ...rest } = props;
 
+  return (
+    <select
+      ref={ref}
+      {...rest}
+      className={`select ${className}`.trim()}
+    />
+  );
+});
 
+SelectInner.propTypes = {
+  className: PropTypes.string,
+};
+
+export const Select = memo(SelectInner);

@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
-import Select from '../../components/ui/Select';
+import {Button} from '../../components/ui/Button';
+import {Input} from '../../components/ui/Input';
+import {Select} from '../../components/ui/Select';
 import { useMovimientos } from '../../hooks/useMovimientos';
 import './Nuevo.css';
 
@@ -13,10 +13,14 @@ const schema = z.object({
   importe: z.coerce.number().refine(v => v !== 0, { message: 'No puede ser 0' })
 });
 
-export default function Nuevo() {
+export function Nuevo() {
   const { create } = useMovimientos();
-  const { register, handleSubmit, formState: { errors, isSubmitting }, reset } =
-    useForm({ defaultValues: { fecha: new Date().toISOString().slice(0, 10) } });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset
+  } = useForm({ defaultValues: { fecha: new Date().toISOString().slice(0, 10) } });
 
   const onSubmit = async (data) => {
     const parsed = schema.safeParse(data);

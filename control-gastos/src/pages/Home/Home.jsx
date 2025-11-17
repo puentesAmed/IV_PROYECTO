@@ -1,11 +1,11 @@
-import MonthlyBar from '../../components/charts/MonthlyBar';
-import PeriodSwitch from '../../components/common/PeriodSwitch/PeriodSwitch';
+import { MonthlyBar } from '../../components/charts/MonthlyBar';
+import {PeriodSwitch} from '../../components/common/PeriodSwitch/PeriodSwitch';
 import { useResumenMovs } from '../../hooks/useResumenMovs';
 import { useMovimientos } from '../../hooks/useMovimientos';
 import { useMemo, useState } from 'react';
 import './Home.css';
 
-export default function Home(){
+export function Home(){
   const { list = [] } = useMovimientos({ page: 1, limit: 1000 });
 
   // Modo: 'dates' | 'months' | 'years'
@@ -14,27 +14,27 @@ export default function Home(){
   // Rango inicial por modo
   const now = new Date();
   const yyyy = now.getFullYear();
-  const mm = String(now.getMonth()+1).padStart(2,'0');
-  const dd = String(now.getDate()).padStart(2,'0');
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
 
-  const [dateStart, setDateStart]   = useState(`${yyyy}-${mm}-01`);
-  const [dateEnd, setDateEnd]       = useState(`${yyyy}-${mm}-${dd}`);
+  const [dateStart, setDateStart] = useState(`${yyyy}-${mm}-01`);
+  const [dateEnd, setDateEnd] = useState(`${yyyy}-${mm}-${dd}`);
   const [monthStart, setMonthStart] = useState(`${yyyy}-01`);
-  const [monthEnd, setMonthEnd]     = useState(`${yyyy}-${mm}`);
-  const [yearStart, setYearStart]   = useState(String(yyyy-2));
-  const [yearEnd, setYearEnd]       = useState(String(yyyy));
+  const [monthEnd, setMonthEnd] = useState(`${yyyy}-${mm}`);
+  const [yearStart, setYearStart] = useState(String(yyyy - 2));
+  const [yearEnd, setYearEnd] = useState(String(yyyy));
   const [summaryTab, setSummaryTab] = useState('period'); // 'period' | 'cats'
 
   const fmtMoney = useMemo(
     () => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }),
     []
   );
-  
+
   const { series, totals, catRows, periodColLabel } = useResumenMovs(list, {
     mode, dateStart, dateEnd, monthStart, monthEnd, yearStart, yearEnd
   });
-  const { ingresos: tIng = 0, gastos: tGas = 0, balance = 0 } = totals || {};
 
+  const { ingresos: tIng = 0, gastos: tGas = 0, balance = 0 } = totals || {};
 
   return (
     <section className="home-view">
@@ -55,35 +55,43 @@ export default function Home(){
                 <div className="period-controls">
                   <div className="pc-item">
                     <label htmlFor="d1">Desde</label>
-                    <input id="d1" type="date" className="input" value={dateStart} onChange={e=>setDateStart(e.target.value)} />
+                    <input id="d1" type="date" className="input" value={dateStart}
+                      onChange={e => setDateStart(e.target.value)} />
                   </div>
                   <div className="pc-item">
                     <label htmlFor="d2">Hasta</label>
-                    <input id="d2" type="date" className="input" value={dateEnd} onChange={e=>setDateEnd(e.target.value)} />
+                    <input id="d2" type="date" className="input" value={dateEnd}
+                      onChange={e => setDateEnd(e.target.value)} />
                   </div>
                 </div>
               )}
+
               {mode === 'months' && (
                 <div className="period-controls">
                   <div className="pc-item">
                     <label htmlFor="m1">Desde</label>
-                    <input id="m1" type="month" className="input" value={monthStart} onChange={e=>setMonthStart(e.target.value)} />
+                    <input id="m1" type="month" className="input" value={monthStart}
+                      onChange={e => setMonthStart(e.target.value)} />
                   </div>
                   <div className="pc-item">
                     <label htmlFor="m2">Hasta</label>
-                    <input id="m2" type="month" className="input" value={monthEnd} onChange={e=>setMonthEnd(e.target.value)} />
+                    <input id="m2" type="month" className="input" value={monthEnd}
+                      onChange={e => setMonthEnd(e.target.value)} />
                   </div>
                 </div>
               )}
+
               {mode === 'years' && (
                 <div className="period-controls">
                   <div className="pc-item">
                     <label htmlFor="y1">Desde</label>
-                    <input id="y1" type="number" className="input" min="1970" max="9999" value={yearStart} onChange={e=>setYearStart(e.target.value)} />
+                    <input id="y1" type="number" min="1970" max="9999" className="input"
+                      value={yearStart} onChange={e => setYearStart(e.target.value)} />
                   </div>
                   <div className="pc-item">
                     <label htmlFor="y2">Hasta</label>
-                    <input id="y2" type="number" className="input" min="1970" max="9999" value={yearEnd} onChange={e=>setYearEnd(e.target.value)} />
+                    <input id="y2" type="number" min="1970" max="9999" className="input"
+                      value={yearEnd} onChange={e => setYearEnd(e.target.value)} />
                   </div>
                 </div>
               )}
@@ -97,11 +105,15 @@ export default function Home(){
               </article>
               <article className="card kpi">
                 <span className="kpi__label">Gastos</span>
-                <span className="kpi__value kpi__value--neg">-{fmtMoney.format(tGas).replace('€','').trim()}€</span>
+                <span className="kpi__value kpi__value--neg">
+                  -{fmtMoney.format(tGas).replace('€', '').trim()}€
+                </span>
               </article>
               <article className="card kpi">
                 <span className="kpi__label">Balance</span>
-                <span className={`kpi__value ${balance>=0?'kpi__value--pos':'kpi__value--neg'}`}>{fmtMoney.format(balance)}</span>
+                <span className={`kpi__value ${balance >= 0 ? 'kpi__value--pos' : 'kpi__value--neg'}`}>
+                  {fmtMoney.format(balance)}
+                </span>
               </article>
             </div>
 
@@ -115,30 +127,30 @@ export default function Home(){
                 xKey="label"
                 series={[
                   { key: 'ingresos', label: 'Ingresos', color: 'var(--button)' },
-                  { key: 'gastos',   label: 'Gastos',   color: 'var(--accent)' }
+                  { key: 'gastos', label: 'Gastos', color: 'var(--accent)' }
                 ]}
                 height={220}
-                variant="line"   // o "line" si quieres con líneas
+                variant="line"
               />
             </article>
           </div>
         </div>
 
-      {/* Derecha: tabla de resúmenes */}
+        {/* Derecha: tabla de resúmenes */}
         <div className="home-right">
           <article className="card data-card">
             <div className="data-card__bar">
               <h2 className="data-card__title">
-                {summaryTab === 'period' ? `Resumen por ${periodColLabel.toLowerCase()}` : 'Resumen por categorías'}
+                {summaryTab === 'period'
+                  ? `Resumen por ${periodColLabel.toLowerCase()}`
+                  : 'Resumen por categorías'}
               </h2>
 
               <div className="period-switch">
-                <button className={`chip ${summaryTab==='period'?'chip--active':''}`} onClick={()=>setSummaryTab('period')}>
-                  Periodo
-                </button>
-                <button className={`chip ${summaryTab==='cats'?'chip--active':''}`} onClick={()=>setSummaryTab('cats')}>
-                  Categorías
-                </button>
+                <button className={`chip ${summaryTab === 'period' ? 'chip--active' : ''}`}
+                  onClick={() => setSummaryTab('period')}>Periodo</button>
+                <button className={`chip ${summaryTab === 'cats' ? 'chip--active' : ''}`}
+                  onClick={() => setSummaryTab('cats')}>Categorías</button>
               </div>
             </div>
 
@@ -156,13 +168,13 @@ export default function Home(){
                   <tbody>
                     {series.map((r, i) => (
                       <tr key={r.key || i}>
-                        <td data-label={periodColLabel} className="text-strong">{r.label}</td>
-                        <td data-label="Ingresos" className="num amount amount--pos">{fmtMoney.format(r.ingresos || 0)}</td>
-                        <td data-label="Gastos" className="num amount amount--neg">
-                          -{fmtMoney.format((r.gastos || 0)).replace('€','').trim()}€
+                        <td className="text-strong">{r.label}</td>
+                        <td className="num amount amount--pos">{fmtMoney.format(r.ingresos || 0)}</td>
+                        <td className="num amount amount--neg">
+                          -{fmtMoney.format(r.gastos || 0).replace('€', '').trim()}€
                         </td>
-                        <td data-label="Balance" className={`num amount ${((r.ingresos||0)-(r.gastos||0))>=0?'amount--pos':'amount--neg'}`}>
-                          {fmtMoney.format((r.ingresos||0)-(r.gastos||0))}
+                        <td className={`num amount ${(r.ingresos - r.gastos) >= 0 ? 'amount--pos' : 'amount--neg'}`}>
+                          {fmtMoney.format((r.ingresos || 0) - (r.gastos || 0))}
                         </td>
                       </tr>
                     ))}
@@ -171,8 +183,12 @@ export default function Home(){
                     <tr>
                       <th>Total</th>
                       <th className="num amount amount--pos">{fmtMoney.format(tIng)}</th>
-                      <th className="num amount amount--neg">-{fmtMoney.format(tGas).replace('€','').trim()}€</th>
-                      <th className={`num amount ${balance>=0?'amount--pos':'amount--neg'}`}>{fmtMoney.format(balance)}</th>
+                      <th className="num amount amount--neg">
+                        -{fmtMoney.format(tGas).replace('€', '').trim()}€
+                      </th>
+                      <th className={`num amount ${balance >= 0 ? 'amount--pos' : 'amount--neg'}`}>
+                        {fmtMoney.format(balance)}
+                      </th>
                     </tr>
                   </tfoot>
                 </table>
@@ -191,12 +207,12 @@ export default function Home(){
                   <tbody>
                     {catRows.map((r, i) => (
                       <tr key={r.categoria || i}>
-                        <td data-label="Categoría" className="text-strong">{r.categoria}</td>
-                        <td data-label="Ingresos" className="num amount amount--pos">{fmtMoney.format(r.ingresos)}</td>
-                        <td data-label="Gastos" className="num amount amount--neg">
-                          -{fmtMoney.format(r.gastos).replace('€','').trim()}€
+                        <td className="text-strong">{r.categoria}</td>
+                        <td className="num amount amount--pos">{fmtMoney.format(r.ingresos)}</td>
+                        <td className="num amount amount--neg">
+                          -{fmtMoney.format(r.gastos).replace('€', '').trim()}€
                         </td>
-                        <td data-label="Balance" className={`num amount ${r.balance>=0?'amount--pos':'amount--neg'}`}>
+                        <td className={`num amount ${r.balance >= 0 ? 'amount--pos' : 'amount--neg'}`}>
                           {fmtMoney.format(r.balance)}
                         </td>
                       </tr>
@@ -207,7 +223,6 @@ export default function Home(){
             )}
           </article>
         </div>
-        
       </div>
     </section>
   );

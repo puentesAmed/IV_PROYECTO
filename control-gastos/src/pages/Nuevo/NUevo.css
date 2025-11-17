@@ -4,6 +4,8 @@
   justify-content: center;
   align-items: flex-start;
   padding: 24px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-card {
@@ -16,15 +18,21 @@
   box-shadow: var(--shadow-soft);
 }
 
+.form-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-strong);
+  transition: transform .12s ease;
+}
+
 .form-title {
   font-size: 1.6rem;
   margin-bottom: 20px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text);
   text-align: center;
 }
 
-/* grid moderno */
+/* Grid moderno */
 .form-grid {
   display: grid;
   gap: 18px;
@@ -38,31 +46,49 @@
 
 .form-field label {
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
-.input, select {
+/* Inputs y selects coherentes con tu sistema */
+.input,
+.select {
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--background);
+  background: var(--surface);
+  color: var(--text);
   font-size: 0.95rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .input:focus,
-select:focus {
+.select:focus {
   border-color: var(--primary);
   outline: none;
-  box-shadow: 0 0 0 2px var(--primary-light);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
+/* Error */
 .error {
   font-size: 0.8rem;
-  color: var(--danger);
+  color: var(--accent);
 }
 
+/* Acciones */
 .form-actions {
   display: flex;
   justify-content: flex-end;
   margin-top: 12px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .nuevo-view {
+    padding: 16px;
+  }
+
+  .form-card {
+    padding: 18px;
+  }
 }

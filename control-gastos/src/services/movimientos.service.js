@@ -1,23 +1,41 @@
-import { get, post, put, del } from '../services/http.js';
+import { get, post, put, del } from "./http.js";
 
+export async function getMovimientos(params = {}, { signal } = {}) {
+  const { page = 1, limit = 20, q, categoria } = params;
 
-export async function getMovimientos(params = {}, signal){
+  const query = {
+    _page: page,
+    _limit: limit,
+  };
 
-    const { page = 1, limit = 10, q, categoria } = params;
-    const { data, headers } = await get('/movimientos', { params:{ _page:page, _limit:limit, q, categoria }, signal })
-    const total = Number(headers?.['x-total-count'] ?? (Array.isArray(data)?data.length:0))
-    const items = Array.isArray(data) ? data : data?.data ?? data
-    return { items, total };
+  if (q) query.q = q;
+  if (categoria) query.categoria = categoria;
+
+  const { data, headers } = await get("/movimientos", {
+    params: query,
+    signal,
+  });
+
+  const items = Array.isArray(data) ? data : [];
+
+  const totalHeader =
+    headers?.["x-total-count"] ??
+    headers?.["X-Total-Count"] ??
+    null;
+
+  const total = Number(totalHeader ?? items.length);
+
+  return { items, total };
 }
 
-export async function createMovimiento(data){ 
-    return post(`/movimientos`,data); 
+export function createMovimiento(payload) {
+  return post("/movimientos", payload);
 }
 
-export async function updateMovimiento(id, data){ 
-    return put(`/movimientos/${id}`, data); 
+export function updateMovimiento(id, payload) {
+  return put(`/movimientos/${id}`, payload);
 }
 
-export async function deleteMovimiento(id){ 
-    return del(`/movimientos/${id}`); 
+export function deleteMovimiento(id) {
+  return del(`/movimientos/${id}`);
 }

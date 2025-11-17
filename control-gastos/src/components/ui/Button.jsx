@@ -1,6 +1,7 @@
 import { memo } from "react";
+import PropTypes from "prop-types";
 
-export default memo(function Button({ className, loading, ...rest }) {
+function ButtonInner({ className, loading = false, ...rest }) {
   return (
     <button
       {...rest}
@@ -8,4 +9,11 @@ export default memo(function Button({ className, loading, ...rest }) {
       className={`btn ${className ?? ""}`.trim()}
     />
   );
-});
+}
+
+ButtonInner.propTypes = {
+  className: PropTypes.string,
+  loading: PropTypes.bool,
+};
+
+export const Button = memo(ButtonInner);

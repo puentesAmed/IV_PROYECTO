@@ -1,10 +1,11 @@
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
+import { Header } from "./components/layout/Header";
+import { Footer } from "./components/layout/Footer";
 
-function App() {
+export function App() {
   const { pathname } = useLocation();
+
   useEffect(() => {
     document.getElementById("main-content")?.focus();
   }, [pathname]);
@@ -20,4 +21,3 @@ function App() {
     </div>
   );
 }
-export default App;

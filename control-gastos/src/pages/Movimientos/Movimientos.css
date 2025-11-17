@@ -1,112 +1,147 @@
 /* MOVIMIENTOS — aislado */
-.movimientos-view{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  width:100%;
-  margin:8px;
+.movimientos-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin: 8px;
 }
 
 /* Encabezado */
-.movimientos-view .mov-head{ margin-bottom:12px; }
-.movimientos-view .mov-head h1{ margin:0 0 4px; letter-spacing:-.02em; }
-.movimientos-view .mov-head .muted{ margin:0; color:var(--text-muted); font-size:14px; }
+.movimientos-view .mov-head {
+  margin-bottom: 12px;
+}
+.movimientos-view .mov-head h1 {
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+}
+.movimientos-view .mov-head .muted {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
 
 /* Card (solo aquí) */
-.movimientos-view .card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:14px;
-  box-shadow:var(--shadow-soft);
-  padding:16px;
+.movimientos-view .card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 16px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
-.movimientos-view .card:hover{
-  transform:translateY(-1px);
-  box-shadow:var(--shadow-strong);
-  transition:transform .12s ease;
+.movimientos-view .card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-strong);
 }
 
 /* Filtros */
-.movimientos-view .filters-bar{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  align-items:center;
+.movimientos-view .filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
 }
-.movimientos-view .filters-bar > *{ flex:1 1 220px; }
-.movimientos-view .filters-bar .actions{ margin-left:auto; flex:0 0 auto; }
+.movimientos-view .filters-bar > * {
+  flex: 1 1 220px;
+}
+.movimientos-view .filters-bar .actions {
+  margin-left: auto;
+  flex: 0 0 auto;
+}
 
 /* Tabla contenedor */
-.movimientos-view .table-card{
-  overflow:auto;
-  max-height:600px;
-  -webkit-overflow-scrolling:touch;
+.movimientos-view .table-card {
+  overflow: auto;
+  max-height: 600px;
+  -webkit-overflow-scrolling: touch;
 }
-.movimientos-view .table-card table{ width:100%; border-collapse:collapse; }
+.movimientos-view .table-card table {
+  width: 100%;
+  border-collapse: collapse;
+}
 .movimientos-view .table-card th,
-.movimientos-view .table-card td{ padding:.8rem; }
-.movimientos-view .table-card thead th{
-  position:sticky; top:0; z-index:1; background:var(--primary);
+.movimientos-view .table-card td {
+  padding: 0.8rem;
+}
+.movimientos-view .table-card thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--primary);
 }
 
-[data-theme="dark"] .movimientos-view .table-card thead th{ background:var(--primary-dark); }
+[data-theme="dark"] .movimientos-view .table-card thead th {
+  background: var(--primary-dark);
+}
 
 /* Botón eliminar */
-.movimientos-view .move-btn{
-  background:var(--accent);
-  color:#fff;
-  border:0;
-  padding:2px 10px;
-  border-radius:6px;
-  cursor:pointer;
+.movimientos-view .move-btn {
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+  padding: 2px 10px;
+  border-radius: 6px;
+  cursor: pointer;
 }
-.movimientos-view .move-btn:hover{
+.movimientos-view .move-btn:hover {
   background: color-mix(in srgb, var(--accent) 85%, black);
 }
-[data-theme="dark"] .movimientos-view .move-btn{ background:var(--accent-dark); }
+[data-theme="dark"] .movimientos-view .move-btn {
+  background: var(--accent-dark);
+}
 
 /* Icono */
-.movimientos-view .icon-invert-white{
+.movimientos-view .icon-invert-white {
   filter: brightness(0) invert(1);
-  width:25px; height:25px;
+  width: 25px;
+  height: 25px;
 }
 
 /* Dark: buscador */
-[data-theme="dark"] .movimientos-view #search{
-  color:#fff; -webkit-text-fill-color:#fff;
+[data-theme="dark"] .movimientos-view #search {
+  color: #fff;
+  -webkit-text-fill-color: #fff;
 }
 
 /* --- iPhone SE / móviles estrechos --- */
-@media (max-width: 380px){
+@media (max-width: 380px) {
   /* tabla en tarjetas de 1 columna */
-  .movimientos-view .table-card thead{ display:none; }
-  .movimientos-view .table-card tbody tr{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:6px;
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:10px;
-    margin:10px 0;
-    background:var(--surface);
+  .movimientos-view .table-card thead {
+    display: none;
   }
-  .movimientos-view .table-card td{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:8px;
-    border:0;
-    padding:4px 0;
-    word-break:break-word;
+  .movimientos-view .table-card tbody tr {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px;
+    margin: 10px 0;
+    background: var(--surface);
   }
-  .movimientos-view .table-card td::before{
-    content:attr(data-label);
-    font-size:12px;
-    color:var(--text-muted);
-    margin-right:10px;
+  .movimientos-view .table-card td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    padding: 4px 0;
+    word-break: break-word;
   }
-  .movimientos-view .table-card .num{ text-align:right; white-space:normal; }
+  .movimientos-view .table-card td::before {
+    content: attr(data-label);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-right: 10px;
+  }
+  .movimientos-view .table-card .num {
+    text-align: right;
+    white-space: normal;
+  }
 
   /* filtros compactos */
-  .movimientos-view .filters-bar > *{ flex:1 1 140px; }
+  .movimientos-view .filters-bar > * {
+    flex: 1 1 140px;
+  }
 }
