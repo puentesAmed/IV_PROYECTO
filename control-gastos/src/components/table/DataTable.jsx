@@ -1,5 +1,4 @@
 import { memo } from "react";
-import PropTypes from "prop-types";
 
 function DataTableInner({
   columns = [],
@@ -16,16 +15,11 @@ function DataTableInner({
     <div className="table-responsive">
       <table className="table">
         <caption className="sr-only">{caption}</caption>
-
         <colgroup>
           {columns.map((c) => (
-            <col
-              key={String(c.key)}
-              style={c.width ? { width: c.width } : undefined}
-            />
+            <col key={String(c.key)} style={c.width ? { width: c.width } : undefined} />
           ))}
         </colgroup>
-
         <thead>
           <tr>
             {columns.map((c) => (
@@ -39,11 +33,7 @@ function DataTableInner({
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan={columns.length}
-                role="status"
-                style={{ textAlign: "center" }}
-              >
+              <td colSpan={columns.length} role="status" style={{ textAlign: "center" }}>
                 Cargando…
               </td>
             </tr>
@@ -61,28 +51,14 @@ function DataTableInner({
             safeRows.map((r, i) => {
               const rowId = getRowId(r) ?? i;
               return (
-                <tr
-                  key={rowId}
-                  onClick={onRowClick ? () => onRowClick(r) : undefined}
-                >
+                <tr key={rowId} onClick={onRowClick ? () => onRowClick(r) : undefined}>
                   {columns.map((c) => {
                     const value = r?.[c.key];
-                    const content = c.render
-                      ? c.render(r, value, i)
-                      : String(value ?? "");
-                    const alignClass =
-                      c.align === "right"
-                        ? "num"
-                        : c.align === "center"
-                        ? "center"
-                        : "";
+                    const content = c.render ? c.render(r, value, i) : String(value ?? "");
+                    const alignClass = c.align === "right" ? "num" : c.align === "center" ? "center" : "";
 
                     return (
-                      <td
-                        key={String(c.key)}
-                        data-label={c.header}
-                        className={`${alignClass} ${c.className ?? ""}`.trim()}
-                      >
+                      <td key={String(c.key)} data-label={c.header} className={`${alignClass} ${c.className ?? ""}`.trim()}>
                         {content}
                       </td>
                     );
@@ -95,24 +71,5 @@ function DataTableInner({
     </div>
   );
 }
-
-DataTableInner.propTypes = {
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      header: PropTypes.string.isRequired,
-      width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      align: PropTypes.oneOf(["left", "right", "center"]),
-      className: PropTypes.string,
-      render: PropTypes.func,
-    })
-  ),
-  rows: PropTypes.arrayOf(PropTypes.object),
-  caption: PropTypes.string,
-  getRowId: PropTypes.func,
-  loading: PropTypes.bool,
-  emptyText: PropTypes.string,
-  onRowClick: PropTypes.func,
-};
 
 export const DataTable = memo(DataTableInner);

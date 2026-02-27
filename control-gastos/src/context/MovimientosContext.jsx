@@ -1,61 +1,94 @@
-import { createContext, useState, useCallback, useMemo, useRef } from "react";
+import { createContext, useCallback, useEffect, useMemo, useState } from "react";
 
-import * as svc from '../services/movimientos.service';
+const STORAGE_KEY = "movimientos_storage";
+const DEFAULT_FILTERS = { page: 1, limit: 20, q: "", categoria: "" };
 
-const Ctx = createContext(null);
+const sampleMovimientos = [
+  { id: "m1", fecha: "2026-02-01", concepto: "Nómina", categoria: "Ingresos", importe: 1650 },
+  { id: "m2", fecha: "2026-02-03", concepto: "Supermercado", categoria: "Alimentación", importe: -92.4 },
+  { id: "m3", fecha: "2026-02-05", concepto: "Gasolina", categoria: "Transporte", importe: -55 },
+  { id: "m4", fecha: "2026-02-08", concepto: "Internet", categoria: "Hogar", importe: -39.9 },
+  { id: "m5", fecha: "2026-02-10", concepto: "Freelance", categoria: "Ingresos", importe: 420 },
+];
 
-function MovimientosProvider({ children }) {
-  const [list, setList] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const ctrlRef = useRef(null);
+function readMovimientos() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
 
-  const fetchList = useCallback(async (params) => {
-    ctrlRef.current?.abort();
-    ctrlRef.current = new AbortController();
-    setLoading(true);
-    setError(null);
-    
-    try {
-        const res = await svc.getMovimientos(params, ctrlRef.current.signal);
-        setList(res.items);
-        setTotal(res.total);
-    } catch (e) {
-        if (e.name !== 'AbortError') setError(e.message ?? 'Error desconocido');
-    } finally {
-        setLoading(false);
-    }
+export const MovimientosContext = createContext(null);
+
+export function MovimientosProvider({ children }) {
+  const [allMovimientos, setAllMovimientos] = useState(() => readMovimientos());
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(allMovimientos));
+  }, [allMovimientos]);
+
+  const setFilter = useCallback((patch) => {
+    setFilters((prev) => ({ ...prev, ...patch, page: 1 }));
   }, []);
 
-  const create = useCallback(async (data) => {
-    await svc.createMovimiento(data);
-    await fetchList();
-  }, [fetchList]);
-  const update = useCallback(async (id, data) => {
-    await svc.updateMovimiento(id, data);
-    await fetchList();
-  }, [fetchList]);
+  const filtered = useMemo(() => {
+    const search = filters.q.trim().toLowerCase();
+
+    return allMovimientos.filter((item) => {
+      const byCategory = filters.categoria ? item.categoria === filters.categoria : true;
+      if (!byCategory) return false;
+
+      if (!search) return true;
+
+      const fields = [item.fecha, item.concepto, item.categoria, String(item.importe ?? "")]
+        .join(" ")
+        .toLowerCase();
+
+      return fields.includes(search);
+    });
+  }, [allMovimientos, filters.q, filters.categoria]);
+
+  const total = filtered.length;
+  const visibleCount = (filters.page || 1) * (filters.limit || 20);
+  const list = filtered.slice(0, visibleCount);
+  const hasMore = list.length < filtered.length;
+
+  const create = useCallback(async (payload) => {
+    const next = { ...payload, id: crypto.randomUUID() };
+    setAllMovimientos((prev) => [next, ...prev]);
+  }, []);
+
   const remove = useCallback(async (id) => {
-    await svc.deleteMovimiento(id);
-    await fetchList();
-  }, [fetchList]);
+    setAllMovimientos((prev) => prev.filter((item) => item.id !== id));
+  }, []);
 
+  const loadNextPage = useCallback(() => {
+    setFilters((prev) => ({ ...prev, page: prev.page + 1 }));
+  }, []);
 
-  const value = useMemo(() => ({
-    list,
-    total,
-    loading,
-    error,
-    fetchList,
-    create,
-    update,
-    remove
-  }), [list, total, loading, error, fetchList, create, update, remove]);
+  const loadSampleData = useCallback(() => {
+    setAllMovimientos(sampleMovimientos);
+  }, []);
 
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
-};
+  const value = useMemo(
+    () => ({
+      list,
+      total,
+      loading: false,
+      error: null,
+      hasMore,
+      filters,
+      setFilter,
+      loadNextPage,
+      create,
+      remove,
+      loadSampleData,
+    }),
+    [list, total, hasMore, filters, setFilter, loadNextPage, create, remove, loadSampleData]
+  );
 
-
-
-export { MovimientosProvider, Ctx };
+  return <MovimientosContext.Provider value={value}>{children}</MovimientosContext.Provider>;
+}

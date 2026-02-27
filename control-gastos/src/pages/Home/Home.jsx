@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 import './Home.css';
 
 export function Home(){
-  const { list = [] } = useMovimientos({ page: 1, limit: 1000 });
+  const { list = [] } = useMovimientos();
 
   // Modo: 'dates' | 'months' | 'years'
   const [mode, setMode] = useState('months');

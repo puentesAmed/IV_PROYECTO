@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 export function PeriodSwitch({
   value = "months",
   onChange,
@@ -10,11 +8,7 @@ export function PeriodSwitch({
   ],
 }) {
   return (
-    <div
-      className="period-switch"
-      role="group"
-      aria-label="Selector de periodo"
-    >
+    <div className="period-switch" role="group" aria-label="Selector de periodo">
       {options.map((o) => (
         <button
           key={o.k}
@@ -29,14 +23,3 @@ export function PeriodSwitch({
     </div>
   );
 }
-
-PeriodSwitch.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      k: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-    })
-  ),
-};

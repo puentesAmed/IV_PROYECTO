@@ -1,14 +1,22 @@
 import { Link, NavLink } from "react-router-dom";
-import { useTheme } from "../../hooks/useTheme";
+import { useContext } from "react";
+import { ThemeContext } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext";
+import { useNotification } from "../../context/NotificationContext";
 import Logo from "../common/Logo/Logo";
 import light from "../../assets/light-mode-iconSol.png";
 import dark from "../../assets/dark-mode-iconluna.png";
-import { useAuth } from "../../hooks/useAuth";
 
 export function Header() {
-  const { theme, toggle } = useTheme();
+  const { theme, toggle } = useContext(ThemeContext);
   const { user, logout } = useAuth();
+  const { notify } = useNotification();
   const isDark = theme === "dark";
+
+  const handleLogout = () => {
+    logout();
+    notify("Sesión cerrada", "info");
+  };
 
   return (
     <header className="header" role="banner">
@@ -18,51 +26,38 @@ export function Header() {
         </Link>
 
         <nav className="nav" aria-label="Navegación principal">
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) => (isActive ? "active" : undefined)}
-          >
+          <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : undefined)}>
             Inicio
           </NavLink>
 
           {user && (
-            <NavLink
-              to="/movimientos"
-              className={({ isActive }) => (isActive ? "active" : undefined)}
-            >
+            <NavLink to="/movimientos" className={({ isActive }) => (isActive ? "active" : undefined)}>
               Movimientos
             </NavLink>
           )}
 
           {user && (
-            <NavLink
-              to="/nuevo"
-              className={({ isActive }) => (isActive ? "active" : undefined)}
-            >
+            <NavLink to="/nuevo" className={({ isActive }) => (isActive ? "active" : undefined)}>
               Nuevo
             </NavLink>
           )}
 
           {!user && (
-            <NavLink
-              to="/login"
-              className={({ isActive }) => (isActive ? "active" : undefined)}
-            >
-              Login
-            </NavLink>
+            <>
+              <NavLink to="/login" className={({ isActive }) => (isActive ? "active" : undefined)}>
+                Login
+              </NavLink>
+              <NavLink to="/register" className={({ isActive }) => (isActive ? "active" : undefined)}>
+                Registro
+              </NavLink>
+            </>
           )}
         </nav>
 
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          {user && <span className="muted" title={user.email}>Hola, {user.name}</span>}
           {user && (
-            <span className="muted" title={user.email}>
-              Hola, {user.name}
-            </span>
-          )}
-
-          {user && (
-            <button className="btn btn--outline" onClick={logout}>
+            <button className="btn btn--outline" onClick={handleLogout}>
               Salir
             </button>
           )}
@@ -81,4 +76,3 @@ export function Header() {
     </header>
   );
 }
-
