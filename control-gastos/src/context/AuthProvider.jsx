@@ -1,12 +1,22 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AuthContext } from "./AuthContext";
 
-const STORAGE_KEY = "auth_user";
+const SESSION_USER_KEY = "session_auth_user";
+const SESSION_USERS_KEY = "session_auth_users";
+
+function readUsers() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_USERS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = sessionStorage.getItem(SESSION_USER_KEY);
       return raw ? JSON.parse(raw) : null;
     } catch {
       return null;
@@ -14,41 +24,53 @@ export function AuthProvider({ children }) {
   });
 
   useEffect(() => {
-    try {
-      if (user) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-      } else {
-        localStorage.removeItem(STORAGE_KEY);
-      }
-    } catch {/**/}
+    if (user) {
+      sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify(user));
+    } else {
+      sessionStorage.removeItem(SESSION_USER_KEY);
+    }
   }, [user]);
 
+  const register = useCallback(async ({ name, email, password }) => {
+    const users = readUsers();
+    if (users.some((u) => u.email === email)) {
+      throw new Error("Ya existe una cuenta con ese email");
+    }
+
+    const newUser = {
+      id: crypto.randomUUID(),
+      name,
+      email,
+      password,
+    };
+
+    sessionStorage.setItem(SESSION_USERS_KEY, JSON.stringify([...users, newUser]));
+    return { id: newUser.id, name: newUser.name, email: newUser.email };
+  }, []);
+
   const login = useCallback(async ({ email, password }) => {
-    if (!email || !password || password.length < 4) {
+    const users = readUsers();
+    const account = users.find((u) => u.email === email && u.password === password);
+
+    if (!account) {
       throw new Error("Credenciales inválidas");
     }
 
-    const authenticatedUser = {
-      id: "u1",
-      name: email.split("@")[0],
-      email,
+    const sessionUser = {
+      id: account.id,
+      name: account.name,
+      email: account.email,
     };
 
-    setUser(authenticatedUser);
-    return authenticatedUser;
+    setUser(sessionUser);
+    return sessionUser;
   }, []);
 
-  const logout = useCallback(() => {
-    setUser(null);
-  }, []);
+  const logout = useCallback(() => setUser(null), []);
 
   const value = useMemo(
-    () => ({
-      user,
-      login,
-      logout,
-    }),
-    [user, login, logout]
+    () => ({ user, login, logout, register }),
+    [user, login, logout, register]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
