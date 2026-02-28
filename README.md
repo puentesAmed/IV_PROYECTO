@@ -1,217 +1,134 @@
-# 📘 Gastos Fácil — Gestión de ingresos y gastos con React + JSON Server
+# 📘 Gastos Fácil
 
-Aplicación completa para gestionar ingresos, gastos y estadísticas financieras.  
-Incluye autenticación, CRUD de movimientos, filtrado, paginación, gráficos, modo claro/oscuro y análisis por periodos (día, mes, año).
+Aplicación de control de gastos e ingresos construida con React.
 
 ---
 
-## 🚀 Tecnologías utilizadas
+## ✅ Estado actual del proyecto
 
-- React + Vite  
-- React Router v6  
-- React Hook Form + Zod  
-- Axios  
-- JSON Server  
-- Recharts  
-- Context API (auth + tema)  
-- CSS variables (modo dark/light)
+Este proyecto funciona **100% en frontend** (sin `json-server` ni API externa):
+
+- La autenticación (registro/login) se guarda en `sessionStorage`.
+- Los movimientos se guardan en `localStorage`.
+- Hay un botón para cargar datos de ejemplo.
+- El feedback al usuario se muestra con notificaciones (toasts), no con `alert()`.
+
+---
+
+## 🚀 Stack tecnológico
+
+- React 19 + Vite
+- React Router
+- React Hook Form
+- Zod
+- Context API
+- CSS
 
 ---
 
 ## 📦 Instalación
 
-Clona el repositorio:
-
-```sh
-git clone https://github.com/puentesAmed/IV_PROYECTO.git
-cd gastos-facil
-```
-
-Instala dependencias:
-
-```sh
+```bash
 npm install
 ```
 
 ---
 
-## 🔧 Configuración del backend (JSON Server)
+## ▶️ Ejecución en desarrollo
 
-El proyecto usa un backend simulado con **db.json**.
-
-Para iniciarlo:
-
-```sh
-npm run server
-```
-
-Esto ejecuta:
-
-```sh
-json-server --watch db.json --port 5179 --delay 500
-```
-
-Tu API estará disponible en:
-
-```
-http://localhost:5179/movimientos
-http://localhost:5179/users
-```
-
----
-
-## ⚙️ Configuración del frontend (Vite)
-
-Crea un archivo `.env` en la raíz del proyecto con tu valor correcto:
-
-```
-VITE_API_URL=http://localhost:5179
-```
-
-Esto conecta Axios con tu backend real o proxy.
-
----
-
-## ▶️ Ejecución del proyecto
-
-Frontend:
-
-```sh
+```bash
 npm run dev
 ```
 
-Backend (JSON Server):
+Por defecto Vite abre la app en:
 
-```sh
-npm run server
+- `http://localhost:5173`
+
+---
+
+## 🏗️ Build de producción
+
+```bash
+npm run build
 ```
 
-Abrir en navegador:
+Para previsualizar el build:
 
-```
-http://localhost:5173
+```bash
+npm run preview
 ```
 
 ---
 
-## 🔐 Autenticación
+## 🔐 Autenticación (sesión)
 
-El sistema usa JSON Server para validar usuarios.
+Flujo actual:
 
-Usuario por defecto:
+1. Regístrate en `/register`.
+2. Inicia sesión en `/login`.
+3. Las rutas privadas (`/`, `/home`, `/movimientos`, `/nuevo`) requieren sesión activa.
 
-```
-email: demo@demo.com
-password: demo
-```
+Notas:
 
-El estado se gestiona mediante `useAuth()` con Context API.
+- Los usuarios registrados se guardan en `sessionStorage`.
+- Si cierras la pestaña/ventana, la sesión y usuarios de sesión se pierden.
 
 ---
 
-## 📁 Estructura del proyecto
+## 💸 Movimientos y filtros
 
-```
+- Alta de movimiento desde `/nuevo`.
+- Listado y borrado en `/movimientos`.
+- Filtro combinado por:
+  - Fecha
+  - Concepto
+  - Categoría
+  - Importe
+- Botón **“Cargar datos de ejemplo”** para poblar rápidamente el listado.
+
+Persistencia:
+
+- Los movimientos se guardan en `localStorage`, por lo que se conservan entre sesiones del navegador.
+
+---
+
+## 🔔 Notificaciones
+
+La app usa un sistema de toasts reutilizable para mostrar feedback en acciones como:
+
+- Registro
+- Login / logout
+- Creación de movimiento
+- Eliminación de movimiento
+- Carga de datos de ejemplo
+
+---
+
+## 📁 Estructura (resumen)
+
+```text
 src/
   components/
-    charts/
-    common/
-    layout/
-    table/
-    ui/
+  context/
   hooks/
-    useAuth.js
-    useMovimientos.js
-    useResumenMovs.js
   pages/
-    Home/
-    Login/
-    Movimientos/
-    Nuevo/
-  services/
-    http.js
-    movimientos.service.js
-  utils/
-    aggregateMovs.js
-  router/
-    index.jsx
-    ProtectedRoute.jsx
-  App.jsx
+  routes/
+  styles/
 ```
 
 ---
 
-## 📊 Funcionalidades
+## 🧪 Scripts disponibles
 
-### ✔️ Gestión de movimientos
-- Crear/leer/actualizar/eliminar movimientos.
-- Scroll infinito.
-- Filtro por categorías.
-- Búsqueda global.
-- Eliminación con confirmación.
-
-### ✔️ Dashboard financiero
-- Gráficos por día, mes o año.
-- KPIs de ingresos, gastos y balance.
-- Resumen por periodos.
-- Resumen por categorías.
-- Selector dinámico de rango.
-
-### ✔️ Interfaz
-- Tema claro / oscuro.
-- Diseño responsive.
-- Componentes reutilizables.
-- Accesibilidad optimizada.
-
----
-
-## 🧪 Endpoints JSON Server
-
-### Obtener movimientos
-
-```
-GET /movimientos?_page=1&_limit=20&q=texto&categoria=Vivienda
-```
-
-### Crear movimiento
-
-```
-POST /movimientos
-```
-
-### Actualizar movimiento
-
-```
-PUT /movimientos/:id
-```
-
-### Eliminar movimiento
-
-```
-DELETE /movimientos/:id
+```bash
+npm run dev      # entorno de desarrollo
+npm run build    # build de producción
+npm run preview  # previsualización del build
 ```
 
 ---
 
-## 🛠 Scripts NPM
+## 📝 Observaciones
 
-```
-npm run dev       # Inicia frontend
-npm run build     # Compila producción
-npm run preview   # Previsualiza build
-npm run server    # Inicia JSON Server en puerto 3000
-```
-
----
-
-## 🧩 Variables de entorno
-
-```
-VITE_API_URL=http://localhost:5179
-```
-
----
-
-## 📝 Licencia
-
-MIT License — libre para uso, modificación y distribución.
+- No requiere variables de entorno para funcionar en local.
+- No requiere backend para probar la aplicación.
