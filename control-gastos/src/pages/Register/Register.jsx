@@ -88,7 +88,7 @@ export function Register() {
           </div>
 
           <p className="muted">
-            ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+            ¿Ya tienes cuenta? <Link to="/login" className="auth-link">Inicia sesión</Link>
           </p>
         </form>
       </div>

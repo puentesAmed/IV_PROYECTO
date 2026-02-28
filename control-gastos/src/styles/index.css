@@ -11,6 +11,8 @@
   --accent-dark: #be123c;    /* Rojo oscuro */
   --button: #4ade80;         /* Verde claro */
   --button-text: #111827;
+  --color-link: #2563eb;         /* Azul elegante para modo claro */
+  --color-link-hover: #1d4ed8;
 
   /* Sombras */
   --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.2);
@@ -30,6 +32,8 @@
   --accent-dark: #9f1239;
   --button: #4ade80;
   --button-text: #111827;
+  --color-link: #60a5fa;         /* Azul más luminoso para oscuro */
+  --color-link-hover: #93c5fd;
 
   --shadow-soft: 0 8px 30px rgba(2, 6, 4, 0.6);
   --shadow-strong: 0 18px 50px rgba(2, 6, 4, 0.7);

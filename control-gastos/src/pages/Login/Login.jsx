@@ -71,7 +71,7 @@ export function Login() {
           </div>
 
           <p className="muted">
-            ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
+            ¿No tienes cuenta? <Link to="/register" className="auth-link">Regístrate</Link>
           </p>
         </form>
       </div>
